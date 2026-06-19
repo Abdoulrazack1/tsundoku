@@ -23,6 +23,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.10.0/dist/list.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@2.7.2/dist/quote.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@1.4.2/dist/delimiter.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@2.9.3/dist/image.umd.min.js"></script>
 </head>
 <body>
   <div class="admin">
@@ -41,14 +42,14 @@
 
         <aside class="editor-aside">
           <div class="editor-panel">
-            <h4>Couverture</h4>
+            <h4>Couverture de l'article</h4>
             <img id="cover-preview" alt="" style="width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:6px;background:var(--line);display:none;margin-bottom:12px">
             <div class="editor-actions">
               <label class="btn btn--sm btn--block" style="cursor:pointer">Téléverser une image
                 <input type="file" id="cover-file" accept="image/*" hidden>
               </label>
               <details>
-                <summary class="btn btn--sm btn--block" style="list-style:none">Chercher sur Anilist</summary>
+                <summary class="btn btn--sm btn--block" style="list-style:none">Chercher une cover (Anilist)</summary>
                 <div style="margin-top:10px">
                   <input class="input" id="anilist-q" placeholder="Titre du manga…">
                   <button class="btn btn--sm btn--block" id="anilist-search" style="margin-top:8px">Rechercher</button>
@@ -59,8 +60,31 @@
           </div>
 
           <div class="editor-panel">
-            <h4>Livre lié</h4>
-            <select class="select" id="book-select"><option value="">— Aucun —</option></select>
+            <h4>Série liée</h4>
+            <select class="select" id="book-select"><option value="">— Aucune —</option></select>
+            <p class="text-muted" style="font-size:.72rem;margin-top:6px">La cover de l'article reprend celle de la série si vide.</p>
+          </div>
+
+          <div class="editor-panel">
+            <h4>Planches & images (Inko)</h4>
+            <p class="text-muted" style="font-size:.72rem;margin-bottom:8px">Cherche une œuvre, ouvre un chapitre, clique une planche pour l'insérer dans l'article.</p>
+            <div style="display:flex;gap:6px">
+              <input class="input" id="inko-q" placeholder="One Piece, Berserk…" style="flex:1">
+              <button class="btn btn--sm" id="inko-search">OK</button>
+            </div>
+            <div id="inko-status" class="text-muted" style="font-size:.72rem;margin-top:6px"></div>
+            <div id="inko-results" style="margin-top:10px;display:grid;gap:6px;max-height:340px;overflow:auto"></div>
+          </div>
+
+          <div class="editor-panel">
+            <h4>Notes (sur 5)</h4>
+            <div style="display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;font-size:var(--fs-ui)">
+              <label for="r-global">Globale</label><input class="input" id="r-global" type="number" step="0.5" min="0" max="5" style="width:80px">
+              <label for="r-art">Dessin</label><input class="input" id="r-art" type="number" step="0.5" min="0" max="5" style="width:80px">
+              <label for="r-story">Scénario</label><input class="input" id="r-story" type="number" step="0.5" min="0" max="5" style="width:80px">
+              <label for="r-chars">Personnages</label><input class="input" id="r-chars" type="number" step="0.5" min="0" max="5" style="width:80px">
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:var(--fs-ui)"><input type="checkbox" id="has-spoilers"> Contient des spoilers</label>
           </div>
 
           <div class="editor-panel">

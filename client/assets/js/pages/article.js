@@ -18,6 +18,17 @@ function meta(post) {
   return bits.map((x) => `<span>${x}</span>`).join('');
 }
 
+function ratingAxes(post) {
+  const axes = [
+    ['Dessin', post.rating_art],
+    ['Scénario', post.rating_story],
+    ['Personnages', post.rating_chars],
+  ].filter(([, v]) => v != null);
+  if (!axes.length) return '';
+  return `<div class="rating-axes">${axes.map(([l, v]) =>
+    `<div class="rating-axis"><div class="rating-axis__val">${Number(v).toFixed(1)}</div><div class="rating-axis__label">${l}</div></div>`).join('')}</div>`;
+}
+
 function bookCard(b) {
   if (!b) return '';
   const rows = [
@@ -213,7 +224,9 @@ async function render() {
         <p class="article-hero__meta">${cat ? `<span class="text-accent">${escapeHtml(cat.name)}</span> · ` : ''}${post.reading_time || 1} min de lecture</p>
         <h1 class="article-hero__title" id="art-title">${escapeHtml(post.title)}</h1>
         <div class="article-hero__byline">${meta(post)}</div>
+        ${post.has_spoilers ? '<div style="margin-top:14px"><span class="spoiler-badge">⚠ Contient des spoilers</span></div>' : ''}
         ${post.rating != null ? `<div style="margin-top:16px">${starsHtml(post.rating)}</div>` : ''}
+        ${ratingAxes(post)}
       </header>
       <figure style="text-align:center">
         <img class="article-cover" src="${coverFallback(post.cover_image_url, post.title)}" alt="Couverture : ${escapeHtml(post.book?.title || post.title)}">

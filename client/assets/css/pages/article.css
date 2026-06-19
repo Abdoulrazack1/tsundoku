@@ -49,6 +49,20 @@
 .article-nav__dir { font-size: var(--fs-small); color: var(--muted); text-transform: uppercase; letter-spacing: var(--ls-ui); }
 @media (max-width: 600px) { .article-nav { grid-template-columns: 1fr; } }
 
+/* Planches & images manga insérées dans l'article */
+.prose .manga-figure, .article-body figure { margin: var(--space-lg) 0; text-align: center; }
+.prose .manga-figure img, .article-body figure img { max-width: 100%; border-radius: 4px; box-shadow: var(--shadow-md); }
+.prose .manga-figure figcaption { font-family: var(--font-ui); font-size: var(--fs-small); color: var(--muted); margin-top: 10px; letter-spacing: 0.04em; }
+/* Image Editor.js (rendu admin) */
+.cdx-block.image-tool img { border-radius: 4px; }
+
+/* Notes multi-axes (chronique manga) */
+.rating-axes { display: flex; flex-wrap: wrap; gap: var(--space-md); justify-content: center; margin-top: var(--space-md); }
+.rating-axis { text-align: center; }
+.rating-axis__label { font-size: var(--fs-small); letter-spacing: var(--ls-ui); text-transform: uppercase; color: var(--muted); }
+.rating-axis__val { font-family: var(--font-display); font-size: 1.6rem; color: var(--color-accent); line-height: 1.1; }
+.spoiler-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--color-ink); color: var(--color-ink-light); font-size: var(--fs-small); letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }
+
 /* Livre 3D (Three.js) */
 .book-3d { width: 100%; height: 360px; }
 
