@@ -7,15 +7,32 @@ import { revealNow } from '../animations/scroll-reveal.js';
 const grid = qs('#articles-grid');
 const state = {
   category: getParam('category') || '',
+  type: getParam('type') || '',
   sort: getParam('sort') || 'newest',
   page: parseInt(getParam('page'), 10) || 1,
   view: localStorage.getItem('tsundoku_view') || 'grid',
   limit: 9,
 };
 
+const TYPES = [['', 'Tout'], ['chronique', 'Chroniques'], ['analyse', 'Analyses'], ['dossier', 'Dossiers']];
+const TITLES = { '': 'Chroniques', chronique: 'Chroniques', analyse: 'Analyses', dossier: 'Dossiers', journal: 'Journal' };
+
+function renderTypeTabs() {
+  const host = qs('#type-tabs');
+  host.innerHTML = TYPES.map(([v, l]) => `<button class="type-tab ${state.type === v ? 'is-active' : ''}" data-type="${v}">${l}</button>`).join('');
+  host.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-type]'); if (!b) return;
+    state.type = b.dataset.type; state.page = 1;
+    qsa('#type-tabs .type-tab').forEach((t) => t.classList.toggle('is-active', t === b));
+    qs('#page-title').textContent = TITLES[state.type] || 'Chroniques';
+    load();
+  });
+}
+
 function syncURL() {
   const p = new URLSearchParams();
   if (state.category) p.set('category', state.category);
+  if (state.type) p.set('type', state.type);
   if (state.sort !== 'newest') p.set('sort', state.sort);
   if (state.page > 1) p.set('page', state.page);
   history.replaceState(null, '', `${location.pathname}${p.toString() ? '?' + p : ''}`);
@@ -42,7 +59,7 @@ async function load() {
   grid.innerHTML = '<div class="spinner"></div>';
   syncURL();
   try {
-    const data = await api.get(`/posts?page=${state.page}&limit=${state.limit}&sort=${state.sort}${state.category ? '&category=' + state.category : ''}`);
+    const data = await api.get(`/posts?page=${state.page}&limit=${state.limit}&sort=${state.sort}${state.category ? '&category=' + state.category : ''}${state.type ? '&type=' + state.type : ''}`);
     qs('#articles-count').textContent = `${data.total} chronique${data.total > 1 ? 's' : ''} publiée${data.total > 1 ? 's' : ''}.`;
 
     if (!data.posts.length) {
@@ -100,6 +117,8 @@ function initControls() {
   });
 }
 
+renderTypeTabs();
+if (state.type) qs('#page-title').textContent = TITLES[state.type] || 'Chroniques';
 loadCategories();
 initControls();
 load();

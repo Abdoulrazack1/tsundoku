@@ -7,6 +7,7 @@ import { splitReveal } from '../animations/gsap-init.js';
 import { toast } from '../core/toast.js';
 
 const root = qs('#article');
+const TYPE_LABEL = { dossier: 'Dossier', analyse: 'Analyse', journal: 'Journal', liste: 'Liste' };
 
 function meta(post) {
   const b = post.book;
@@ -221,7 +222,7 @@ async function render() {
 
     root.innerHTML = `
       <header class="article-hero measure">
-        <p class="article-hero__meta">${cat ? `<span class="text-accent">${escapeHtml(cat.name)}</span> · ` : ''}${post.reading_time || 1} min de lecture</p>
+        <p class="article-hero__meta">${TYPE_LABEL[post.type] ? `<span class="text-accent">${TYPE_LABEL[post.type]}</span> · ` : ''}${cat ? `${escapeHtml(cat.name)} · ` : ''}${post.reading_time || 1} min de lecture</p>
         <h1 class="article-hero__title" id="art-title">${escapeHtml(post.title)}</h1>
         <div class="article-hero__byline">${meta(post)}</div>
         ${post.has_spoilers ? '<div style="margin-top:14px"><span class="spoiler-badge">⚠ Contient des spoilers</span></div>' : ''}

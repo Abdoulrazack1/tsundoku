@@ -130,6 +130,7 @@ async function loadExisting() {
     const { post } = await api.auth.get(`/posts/id/${postId}`);
     qs('#editor-heading').textContent = 'Modifier l\'article';
     qs('#post-title').value = post.title || '';
+    qs('#post-type').value = post.type || 'chronique';
     qs('#post-excerpt').value = post.excerpt || '';
     qs('#post-tags').value = (post.tags || []).map((t) => t.name).join(', ');
     qs('#meta-title').value = post.meta_title || '';
@@ -216,6 +217,7 @@ async function save() {
   const num = (sel) => (qs(sel).value !== '' ? Number(qs(sel).value) : null);
   const payload = {
     title,
+    type: qs('#post-type').value,
     content,
     excerpt: qs('#post-excerpt').value.trim(),
     cover_image_url: coverUrl || null,

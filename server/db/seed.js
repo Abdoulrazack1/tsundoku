@@ -95,7 +95,7 @@ const POSTS = [
      <p>Il veut du pain avec de la confiture, un toit, peut-être toucher une poitrine. Cette modestie des désirs, dans un genre obsédé par les grands destins, est subversive.</p>
      <blockquote>« Mes rêves ? Manger à ma faim et dormir au chaud. »</blockquote>
      <p>Le découpage emprunte au cinéma : plans larges muets, ruptures de rythme, gags absurdes. Un shōnen d'auteur, paradoxe assumé.</p>`],
-  [4, "Monster : l'anatomie du mal ordinaire", "Urasawa pose une question simple et terrible : a-t-on le droit de tuer pour empêcher de tuer ? 18 tomes pour ne jamais y répondre.", false, 'analyse', 5.0, 4.5, 5.0, 5.0, true,
+  [4, "Monster : l'anatomie du mal ordinaire", "Urasawa pose une question simple et terrible : a-t-on le droit de tuer pour empêcher de tuer ? 18 tomes pour ne jamais y répondre.", false, 'dossier', 5.0, 4.5, 5.0, 5.0, true,
     `<p><strong>Monster</strong> est un thriller, mais c'est surtout un traité de morale déguisé. Urasawa y dissèque le mal sans jamais le rendre spectaculaire.</p>
      <h2>Le scalpel et la culpabilité</h2>
      <p>Le Dr Tenma sauve la vie d'un enfant qui deviendra Johan, un tueur d'une froideur métaphysique. Le récit refuse les explications faciles : le mal n'a pas de cause unique.</p>

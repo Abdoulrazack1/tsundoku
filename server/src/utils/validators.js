@@ -60,7 +60,7 @@ const schemas = {
     limit: Joi.number().integer().min(1).max(50).default(9),
     category: slug.allow(''),
     tag: slug.allow(''),
-    type: Joi.string().valid('chronique', 'journal', 'liste').allow(''),
+    type: Joi.string().valid('chronique', 'journal', 'liste', 'analyse', 'dossier').allow(''),
     status: Joi.string().valid('draft', 'published', 'archived', 'all').allow(''),
     sort: Joi.string().valid('newest', 'oldest', 'most_viewed', 'top_rated').default('newest'),
     rating_min: Joi.number().min(0).max(5).allow(''),

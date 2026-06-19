@@ -21,7 +21,8 @@ export function articleCard(p, variant = 'md') {
     </a>
     <div class="article-card__body">
       <div class="cluster">
-        ${cat ? `<span class="pill pill--cat" ${catStyle}>${escapeHtml(cat.name)}</span>` : `<span class="pill">${escapeHtml(p.type)}</span>`}
+        ${['dossier', 'analyse'].includes(p.type) ? `<span class="pill pill--type">${p.type === 'dossier' ? 'Dossier' : 'Analyse'}</span>` : ''}
+        ${cat ? `<span class="pill pill--cat" ${catStyle}>${escapeHtml(cat.name)}</span>` : ''}
         ${kindBadges(p.book)}
         ${p.reading_time ? `<span class="text-muted" style="font-size:.8rem">${p.reading_time} min</span>` : ''}
       </div>
