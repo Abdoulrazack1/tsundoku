@@ -54,11 +54,20 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.
 
 .kicker {
   font-family: var(--font-ui);
-  font-weight: 400;
+  font-weight: 600;
   font-size: var(--fs-small);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.kicker::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  background: var(--color-accent);
 }
 
 /* Corps de texte éditorial (article) */

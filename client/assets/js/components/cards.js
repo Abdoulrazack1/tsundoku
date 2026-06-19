@@ -1,5 +1,15 @@
-// Fabriques de cartes (article, livre, ligne) — §5.1
+// Fabriques de cartes (article, série, ligne) — §5.1
 import { escapeHtml, coverFallback, starsHtml, formatDate } from '../core/utils.js';
+
+const DEMO = { shonen: 'Shōnen', seinen: 'Seinen', shojo: 'Shōjo', josei: 'Josei', kodomo: 'Kodomo' };
+const KIND = { manga: 'Manga', manhwa: 'Manhwa', manhua: 'Manhua', novel: 'Light Novel', bd: 'BD' };
+export function kindBadges(b) {
+  if (!b) return '';
+  let out = '';
+  if (b.kind && KIND[b.kind]) out += `<span class="tag-kind">${KIND[b.kind]}</span>`;
+  if (b.demographic && DEMO[b.demographic]) out += `<span class="tag-demo">${DEMO[b.demographic]}</span>`;
+  return out;
+}
 
 export function articleCard(p, variant = 'md') {
   const cat = p.categories?.[0];
@@ -12,6 +22,7 @@ export function articleCard(p, variant = 'md') {
     <div class="article-card__body">
       <div class="cluster">
         ${cat ? `<span class="pill pill--cat" ${catStyle}>${escapeHtml(cat.name)}</span>` : `<span class="pill">${escapeHtml(p.type)}</span>`}
+        ${kindBadges(p.book)}
         ${p.reading_time ? `<span class="text-muted" style="font-size:.8rem">${p.reading_time} min</span>` : ''}
       </div>
       <a href="/article.html?slug=${p.slug}"><h3 class="article-card__title">${escapeHtml(p.title)}</h3></a>
@@ -47,7 +58,8 @@ export function bookCard(b) {
     <div>
       <a href="/book.html?slug=${b.slug}"><div class="book-card__title">${escapeHtml(b.title)}</div></a>
       <div class="book-card__author">${escapeHtml(b.author?.name || '')}</div>
-      <div class="cluster" style="margin-top:6px">
+      <div class="cluster" style="margin-top:6px;gap:6px">
+        ${kindBadges(b)}
         <span class="status-dot" data-status="${b.status}">${labelOf(b.status)}</span>
         ${b.rating != null ? starsHtml(b.rating) : ''}
       </div>

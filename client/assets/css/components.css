@@ -204,3 +204,55 @@
 /* Skip link accessibilité */
 .skip-link { position: absolute; left: 8px; top: -60px; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 4px; z-index: var(--z-cursor); transition: top var(--t-base); }
 .skip-link:focus { top: 8px; }
+
+/* ============================================================
+   IDENTITÉ MANGA — trame (screentone), panneaux, sceau hanko
+   (palette inchangée : washi / sumi / vermillon)
+   ============================================================ */
+
+/* Trame de points façon screentone, en décor */
+.screentone { position: relative; }
+.screentone::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(currentColor 1px, transparent 1.5px);
+  background-size: 9px 9px; opacity: 0.06;
+}
+.screentone > * { position: relative; z-index: 1; }
+
+/* Couvertures encadrées comme des planches (gouttière sumi) */
+.article-card__media, .book-cover, .hero-book__cover, .article-cover {
+  border: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
+}
+
+/* Sceau hanko : carré vermillon au kanji, accent de marque */
+.seal {
+  display: inline-grid; place-items: center; width: 44px; height: 44px; flex: none;
+  background: var(--color-accent); color: #fff; border-radius: 6px;
+  font-family: var(--font-jp); font-weight: 700; font-size: 1.4rem; line-height: 1;
+  box-shadow: 0 6px 18px rgba(var(--color-accent-rgb), 0.35);
+  transform: rotate(-4deg);
+}
+
+/* Intertitre de section avec sceau + filet */
+.section-head { position: relative; }
+.section-head--seal { display: flex; align-items: center; gap: var(--space-sm); }
+
+/* Bande sombre "en ce moment" : screentone vermillon discret */
+.now-reading { position: relative; overflow: hidden; }
+.now-reading::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(192,57,43,0.5) 1px, transparent 1.6px);
+  background-size: 10px 10px; opacity: 0.18;
+}
+.now-reading > * { position: relative; }
+
+/* Lignes de vitesse (divider manga) */
+.speedlines { height: 14px; margin: var(--space-lg) 0; background:
+  repeating-linear-gradient(90deg, var(--color-ink) 0 2px, transparent 2px 7px);
+  opacity: 0.12; mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent); }
+
+/* Démographie / type de série (badge manga) */
+.tag-kind { font-family: var(--font-ui); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 4px 9px; border-radius: 4px; background: var(--color-ink); color: var(--color-ink-light); }
+.tag-demo { font-family: var(--font-ui); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 4px 9px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); }

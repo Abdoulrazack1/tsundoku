@@ -9,7 +9,7 @@ const CARD_COLUMNS = `
   p.book_id,
   b.title AS book_title, b.slug AS book_slug, b.cover_image_url AS book_cover,
   b.publisher AS book_publisher, b.publication_year AS book_year,
-  b.isbn AS book_isbn, b.pages AS book_pages,
+  b.isbn AS book_isbn, b.pages AS book_pages, b.kind AS book_kind, b.demographic AS book_demo,
   a.id AS author_id, a.name AS author_name, a.slug AS author_slug
 `;
 
@@ -31,6 +31,8 @@ function shapeCard(row) {
         publication_year: row.book_year,
         isbn: row.book_isbn,
         pages: row.book_pages,
+        kind: row.book_kind,
+        demographic: row.book_demo,
         author: row.author_id
           ? { id: row.author_id, name: row.author_name, slug: row.author_slug }
           : null,

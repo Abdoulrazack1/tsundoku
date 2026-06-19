@@ -1,7 +1,7 @@
 // Page d'accueil — orchestration des 7 sections (§5.1)
 import { api } from '../core/api.js';
 import { qs, escapeHtml, coverFallback, prefersReducedMotion } from '../core/utils.js';
-import { articleCard, articleRow } from '../components/cards.js';
+import { articleCard, articleRow, kindBadges } from '../components/cards.js';
 import { initScrollReveal } from '../animations/scroll-reveal.js';
 import { splitReveal } from '../animations/gsap-init.js';
 
@@ -15,6 +15,7 @@ async function loadHero() {
     wrap.innerHTML = `
       <p class="hero__kicker">${escapeHtml(cat?.name || 'Chronique')}${post.reading_time ? ` · ${post.reading_time} min de lecture` : ''}</p>
       <h1 class="hero__title font-display" id="hero-title">${escapeHtml(post.title)}</h1>
+      ${post.book ? `<div class="cluster" style="margin-top:14px">${kindBadges(post.book)}</div>` : ''}
       ${post.book?.author ? `<p class="hero__author">— ${escapeHtml(post.book.author.name)}</p>` : ''}
       <p class="hero__excerpt">${escapeHtml(post.excerpt || '')}</p>
       <a class="btn hero__cta" href="/article.html?slug=${post.slug}">Lire la chronique
