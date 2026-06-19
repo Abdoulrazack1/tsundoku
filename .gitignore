@@ -1,0 +1,25 @@
+# Dépendances
+node_modules/
+
+# Environnement & secrets
+.env
+server/.env
+*.local
+
+# Données générées / cache
+server/cache/
+server/logs/
+*.log
+npm-debug.log*
+
+# Uploads & couvertures générées (médias volumineux, régénérables)
+client/uploads/*
+!client/uploads/.gitkeep
+
+# Extraits PDF / temporaires
+_extract_*.txt
+_tts_test.js
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Articles — Tsundoku Admin</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Newsreader:opsz,wght@6..72,300..600&family=Space+Grotesk:wght@300..700&family=Noto+Serif+JP:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/reset.css">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/typography.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/dark-mode.css">
+  <link rel="stylesheet" href="/assets/css/pages/admin.css">
+</head>
+<body>
+  <div class="admin">
+    <div data-admin-sidebar></div>
+    <main class="admin-main">
+      <header class="admin-header">
+        <h1 class="font-display">Articles</h1>
+        <a class="btn btn--solid btn--sm" href="/admin/post-editor.html">+ Nouvel article</a>
+      </header>
+      <div class="filter-group" id="status-filter" style="margin-bottom:var(--space-md)"></div>
+      <div id="table"></div>
+    </main>
+  </div>
+  <script type="module" src="/assets/js/pages/admin/articles-admin.js"></script>
+</body>
+</html>

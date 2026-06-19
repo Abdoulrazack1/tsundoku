@@ -1,0 +1,48 @@
+/* Animations & micro-interactions — cf. §7 */
+
+/* Curseur personnalisé (dot + circle) — §7.3.D */
+.cursor-dot, .cursor-circle { position: fixed; top: 0; left: 0; border-radius: 50%; pointer-events: none; z-index: var(--z-cursor); mix-blend-mode: difference; }
+.cursor-dot { width: 8px; height: 8px; background: #fff; transform: translate(-50%, -50%); }
+.cursor-circle { width: 40px; height: 40px; border: 1px solid #fff; transform: translate(-50%, -50%); transition: width var(--t-base), height var(--t-base), background-color var(--t-base), border-color var(--t-base); }
+.cursor-circle.is-hover { width: 60px; height: 60px; background: rgba(255,255,255,0.1); }
+.cursor-circle.is-media::after { content: "Lire"; font-family: var(--font-ui); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #fff; }
+.cursor-circle.is-media { width: 72px; height: 72px; display: grid; place-items: center; }
+.cursor-circle.is-down, .cursor-dot.is-down { transform: translate(-50%, -50%) scale(0.8); }
+@media (hover: none), (pointer: coarse) { .cursor-dot, .cursor-circle { display: none; } }
+.has-custom-cursor, .has-custom-cursor a, .has-custom-cursor button { cursor: none; }
+
+/* Reveal au scroll (fallback CSS si GSAP absent) */
+.reveal { opacity: 0; transform: translateY(40px); }
+.reveal.is-visible { opacity: 1; transform: none; transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.no-gsap .reveal { opacity: 1; transform: none; }
+
+/* Indicateur de scroll (hero) */
+.scroll-cue { display: grid; place-items: center; gap: 10px; }
+.scroll-cue__line { width: 1px; height: 48px; background: var(--ink); transform-origin: top; animation: scrollPulse 2s var(--ease-inout) infinite; }
+@keyframes scrollPulse { 0% { transform: scaleY(0); opacity: 0; } 40% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(0); opacity: 0; transform-origin: bottom; } }
+
+/* Transition de page (overlay) — §7.B */
+.page-veil { position: fixed; inset: 0; background: var(--ink); z-index: var(--z-overlay); clip-path: inset(100% 0 0 0); pointer-events: none; }
+.page-veil.is-in { clip-path: inset(0 0 0 0); transition: clip-path var(--t-slow) var(--ease-inout); }
+.page-veil.is-out { clip-path: inset(0 0 100% 0); transition: clip-path var(--t-slow) var(--ease-inout); }
+
+/* Fondu au chargement */
+.fade-in { animation: fadeIn 0.6s var(--ease-out) both; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Pile de livres (about / 404) */
+@keyframes bookFall { 0% { transform: translateY(-40px) rotate(-6deg); opacity: 0; } 100% { transform: translateY(0) rotate(0); opacity: 1; } }
+
+/* Spinner */
+.spinner { width: 28px; height: 28px; border: 2px solid var(--line); border-top-color: var(--color-accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: var(--space-lg) auto; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Apparition lettre par lettre (SplitText) — mots insécables, lignes propres */
+.split-word { display: inline-block; white-space: nowrap; }
+.split-char { display: inline-block; will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue__line { animation: none; }
+  .reveal { opacity: 1; transform: none; }
+  .cursor-dot, .cursor-circle { display: none; }
+}

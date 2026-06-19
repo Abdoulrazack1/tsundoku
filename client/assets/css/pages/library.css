@@ -1,0 +1,57 @@
+/* Bibliothèque, fiche livre, journal, listes, citations — §5.4 à §5.9 */
+
+.page-hero { padding-top: calc(var(--nav-h) + var(--space-lg)); padding-bottom: var(--space-md); }
+.page-hero__title { font-family: var(--font-display); font-size: var(--fs-h1); }
+.page-hero__sub { color: var(--muted); margin-top: var(--space-sm); max-width: 60ch; }
+
+.library-toolbar { display: flex; flex-wrap: wrap; gap: var(--space-md); justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); }
+.view-toggle { display: flex; gap: 4px; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 4px; }
+.view-toggle button { width: 40px; height: 36px; border-radius: 6px; display: grid; place-items: center; color: var(--muted); }
+.view-toggle button.is-active { background: var(--ink); color: var(--bg); }
+
+.books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--space-md) var(--space-md); }
+.books-grid.is-list { grid-template-columns: 1fr; }
+.books-grid.is-list .book-card { flex-direction: row; gap: var(--space-md); align-items: center; padding: var(--space-sm); border-bottom: 1px solid var(--line); }
+.books-grid.is-list .book-cover { width: 60px; flex: none; }
+.books-grid.is-list .book-cover { box-shadow: var(--shadow-sm); }
+.books-grid.is-list .book-card:hover .book-cover { transform: none; }
+
+/* Étagère 3D (Three.js) — §5.4 */
+#shelf-3d { width: 100%; height: 520px; border-radius: var(--radius-md); background: linear-gradient(180deg, #1a1410, #0d0a08); display: none; }
+.library.is-shelf #shelf-3d { display: block; }
+.library.is-shelf .books-grid { display: none; }
+
+/* ---- Fiche livre ---- */
+.book-detail { display: grid; grid-template-columns: 320px 1fr; gap: var(--space-xl); padding-top: calc(var(--nav-h) + var(--space-lg)); }
+.book-detail__cover-wrap { position: sticky; top: calc(var(--nav-h) + var(--space-md)); align-self: start; }
+.book-detail__cover { aspect-ratio: 2/3; border-radius: 6px; box-shadow: var(--shadow-lg); object-fit: cover; width: 100%; }
+.book-detail__title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; }
+.book-detail__author { font-size: 1.2rem; color: var(--muted); margin-top: 8px; }
+.book-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--space-md); margin-block: var(--space-lg); padding-block: var(--space-md); border-block: 1px solid var(--line); }
+.book-meta-grid dt { font-size: var(--fs-small); text-transform: uppercase; letter-spacing: var(--ls-ui); color: var(--muted); }
+.book-meta-grid dd { font-family: var(--font-display); font-size: 1.2rem; margin-top: 4px; }
+@media (max-width: 800px) { .book-detail { grid-template-columns: 1fr; } .book-detail__cover-wrap { position: static; max-width: 240px; } }
+
+/* ---- Journal / timeline ---- */
+.timeline { position: relative; padding-left: var(--space-lg); }
+.timeline::before { content: ""; position: absolute; left: 7px; top: 0; bottom: 0; width: 1px; background: var(--line); }
+.tl-entry { position: relative; padding-bottom: var(--space-lg); }
+.tl-entry::before { content: ""; position: absolute; left: -42px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--color-accent); }
+.tl-card { display: grid; grid-template-columns: 64px 1fr; gap: var(--space-sm); align-items: start; }
+.tl-card img { width: 64px; aspect-ratio: 2/3; object-fit: cover; border-radius: 4px; box-shadow: var(--shadow-sm); }
+.tl-date { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--muted); }
+
+/* ---- Listes thématiques ---- */
+.lists-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-md); }
+.list-card { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--line); background: var(--surface); transition: all var(--t-base); }
+.list-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.list-card__cover { aspect-ratio: 16/10; object-fit: cover; background: var(--line); }
+.list-card__body { padding: var(--space-md); }
+.list-card__title { font-family: var(--font-display); font-size: 1.4rem; }
+
+/* ---- Citations ---- */
+.quotes-grid { columns: 2; column-gap: var(--space-md); }
+@media (max-width: 700px) { .quotes-grid { columns: 1; } }
+.quote-card { break-inside: avoid; margin-bottom: var(--space-md); padding: var(--space-md); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+.quote-card__text { font-family: var(--font-display); font-style: italic; font-size: 1.25rem; line-height: 1.5; }
+.quote-card__src { margin-top: var(--space-sm); font-size: var(--fs-ui); color: var(--muted); }

@@ -1,0 +1,73 @@
+/* Page d'accueil — cf. §5.1. DA : washi dominant, ma (間), vermillon parcimonieux. */
+
+/* ---- Hero éditorial (le livre posé sur le papier) ---- */
+.hero { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; padding-top: var(--nav-h); }
+.hero__watermark {
+  position: absolute; right: 2vw; top: 50%; transform: translateY(-50%);
+  writing-mode: vertical-rl; font-family: var(--font-jp); font-weight: 700;
+  font-size: clamp(12rem, 26vw, 22rem); line-height: 0.8;
+  color: var(--color-ink); opacity: 0.04; user-select: none; pointer-events: none; z-index: 0;
+}
+.hero__grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(32px, 6vw, 96px); align-items: center; width: 100%; }
+.hero__text { max-width: 36ch; }
+.hero__kicker { color: var(--color-accent); letter-spacing: 0.18em; text-transform: uppercase; font-size: var(--fs-small); font-weight: 400; }
+.hero__title { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.6rem, 5.5vw, 5rem); line-height: 1.02; letter-spacing: var(--ls-display); margin-block: var(--space-md) var(--space-sm); }
+.hero__author { font-family: var(--font-ui); font-weight: 300; letter-spacing: 0.04em; color: var(--muted); font-size: 1.05rem; }
+.hero__excerpt { font-family: var(--font-serif); font-size: 1.1rem; color: var(--muted); margin-top: var(--space-md); line-height: 1.75; }
+.hero__cta { margin-top: var(--space-lg); }
+
+/* Le livre comme objet : couverture portrait, ombre douce, légère asymétrie (wabi-sabi) */
+.hero__object { display: flex; justify-content: center; perspective: 1600px; }
+.hero-book { position: relative; width: clamp(220px, 24vw, 320px); }
+.hero-book__cover {
+  aspect-ratio: 2/3; width: 100%; object-fit: cover; border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1), 0 30px 60px -20px rgba(26,26,26,.45);
+  transform: rotateY(-14deg) rotateX(3deg) rotateZ(-1.5deg);
+  transition: transform 0.8s var(--ease-out);
+}
+.hero-book::before { /* tranche */ content: ""; position: absolute; inset: 0 auto 0 -2px; width: 10px; background: linear-gradient(90deg, rgba(0,0,0,.28), rgba(0,0,0,0)); border-radius: 3px 0 0 3px; transform: rotateY(-14deg); }
+.hero-book::after { /* ombre portée au sol */ content: ""; position: absolute; left: 8%; right: 8%; bottom: -28px; height: 28px; background: radial-gradient(ellipse at center, rgba(26,26,26,.28), transparent 70%); filter: blur(4px); }
+.hero:hover .hero-book__cover { transform: rotateY(-8deg) rotateX(2deg) translateY(-6px); }
+.hero__scroll { position: absolute; bottom: var(--space-md); left: 50%; transform: translateX(-50%); z-index: 2; }
+
+@media (max-width: 820px) {
+  .hero__grid { grid-template-columns: 1fr; gap: var(--space-lg); text-align: center; }
+  .hero__text { max-width: 100%; margin-inline: auto; }
+  .hero__object { order: -1; }
+  .hero-book { width: 200px; }
+  .hero__watermark { opacity: 0.04; }
+}
+
+/* ---- Grille asymétrique des articles récents ---- */
+.recent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter) var(--space-lg); }
+.recent-grid .article-card--lg { grid-column: span 2; grid-row: span 2; }
+.recent-list { grid-column: 1 / -1; }
+@media (max-width: 880px) {
+  .recent-grid { grid-template-columns: 1fr 1fr; }
+  .recent-grid .article-card--lg { grid-column: span 2; grid-row: auto; }
+}
+@media (max-width: 560px) { .recent-grid { grid-template-columns: 1fr; } .recent-grid .article-card--lg { grid-column: span 1; } }
+
+/* ---- Bande "En ce moment je lis" (fond sumi, contraste voulu §5.1) ---- */
+.now-reading { background: var(--color-ink); color: var(--color-ink-light); border-radius: var(--radius-md); padding: clamp(32px, 5vw, 72px); display: grid; grid-template-columns: 180px 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.now-reading__cover { aspect-ratio: 2/3; border-radius: 3px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); object-fit: cover; transform: perspective(800px) rotateY(-12deg); }
+.now-reading__label { color: var(--color-accent); letter-spacing: 0.18em; text-transform: uppercase; font-size: var(--fs-small); }
+.now-reading__title { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.4rem); margin-block: 10px 4px; }
+.now-reading__author { color: rgba(245,240,232,0.6); margin-bottom: var(--space-md); font-family: var(--font-ui); font-weight: 300; }
+.now-reading .progress { background: rgba(245,240,232,0.15); max-width: 420px; }
+.now-reading__pct { font-family: var(--font-mono); font-size: var(--fs-small); margin-top: 10px; color: rgba(245,240,232,0.7); }
+@media (max-width: 640px) { .now-reading { grid-template-columns: 1fr; text-align: center; justify-items: center; } .now-reading__cover { width: 150px; } }
+
+/* ---- Sélection par genre ---- */
+.genre-row { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+.genre-pill { padding: 12px 26px; border-radius: 999px; font-family: var(--font-ui); letter-spacing: 0.04em; font-size: var(--fs-ui); transition: all var(--t-base); background: color-mix(in srgb, var(--cat) 12%, transparent); color: var(--cat); border: 1px solid transparent; }
+.genre-pill:hover { transform: translateY(-3px); border-color: var(--cat); }
+
+/* ---- Newsletter ---- */
+.newsletter { text-align: center; }
+.newsletter__title { font-family: var(--font-display); font-size: var(--fs-h1); }
+.newsletter__sub { color: var(--muted); margin-top: var(--space-sm); max-width: 48ch; margin-inline: auto; }
+.newsletter__form { display: flex; gap: var(--space-sm); max-width: 520px; margin: var(--space-lg) auto 0; }
+.newsletter__form .input { flex: 1; }
+.newsletter__msg { margin-top: var(--space-sm); min-height: 1.4em; color: var(--color-accent); font-size: var(--fs-ui); }
+@media (max-width: 520px) { .newsletter__form { flex-direction: column; } }

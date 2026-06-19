@@ -1,0 +1,31 @@
+/* Thème sombre — Sumi (墨) — §5.1 / §7.G
+   Transition globale 0.4s sur les propriétés de couleur. */
+
+html { transition: background-color 0.4s ease; }
+body, .navbar, .card, .footer, .input, .textarea, .select, .filter-bar, .chip, .author-card {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+[data-theme="dark"] {
+  --bg: #0d0d0d;
+  --ink: #f5f0e8;
+  --surface: #1a1a1a;
+  --muted: #9a958c;
+  --line: #2a2a2a;
+  color-scheme: dark;
+}
+
+[data-theme="dark"] body { background: var(--bg); color: var(--ink); }
+[data-theme="dark"] .navbar.is-scrolled { background: rgba(13, 13, 13, 0.85); border-bottom-color: var(--line); }
+[data-theme="dark"] .filter-bar { background: rgba(13,13,13,0.9); }
+[data-theme="dark"] .search-overlay { background: rgba(13, 13, 13, 0.98); }
+/* Le logo reste une pastille de papier washi dans les deux thèmes (kanji toujours lisible) */
+[data-theme="dark"] .logo__type { color: var(--ink); }
+[data-theme="dark"] .pill { background: rgba(var(--color-accent-rgb), 0.18); }
+[data-theme="dark"] .btn { --_fg: var(--ink); --_bd: var(--ink); }
+[data-theme="dark"] .btn:hover { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+[data-theme="dark"] .btn--solid { --_bg: var(--ink); --_fg: #0d0d0d; }
+[data-theme="dark"] .card, [data-theme="dark"] .author-card { box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+[data-theme="dark"] .hero__overlay { background: linear-gradient(to bottom, rgba(13,13,13,0) 0%, rgba(13,13,13,0.7) 60%, rgba(13,13,13,1) 100%); }
+[data-theme="dark"] .now-reading { background: #000; }
+[data-theme="dark"] ::selection { color: var(--bg); }

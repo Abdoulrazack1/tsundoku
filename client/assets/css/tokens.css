@@ -1,0 +1,86 @@
+/* =====================================================================
+   TSUNDOKU — Design Tokens (cf. cahier des charges §2)
+   Philosophie : ma (間) — l'intervalle ; wabi-sabi (侘寂) — l'imperfection.
+   ===================================================================== */
+
+:root {
+  /* --- Couleurs --- */
+  --color-bg: #f5f0e8;          /* Washi Off-White */
+  --color-bg-dark: #0d0d0d;     /* Sumi Dark */
+  --color-ink: #1a1a1a;         /* Sumi Ink */
+  --color-ink-light: #f5f0e8;   /* Washi Light */
+  --color-accent: #c0392b;      /* Vermilion */
+  --color-accent-rgb: 192, 57, 43;
+  --color-grey-warm: #8c8c8c;   /* Warm Grey */
+  --color-grey-light: #e8e3db;  /* Light Washi */
+  --color-surface: #ffffff;     /* Pure White */
+  --color-surface-dark: #1a1a1a;/* Deep Ink */
+
+  /* Tokens sémantiques dérivés (réassignés en dark mode) */
+  --bg: var(--color-bg);
+  --ink: var(--color-ink);
+  --surface: var(--color-surface);
+  --muted: var(--color-grey-warm);
+  --line: var(--color-grey-light);
+  --accent: var(--color-accent);
+
+  /* --- Typographie (palette éditoriale awwwards) ---
+     Display : Fraunces (serif variable, contraste & optique).
+     Corps   : Newsreader (lecture longue, élégance de magazine).
+     UI      : Space Grotesk (grotesque géométrique, moderne).
+     JP      : Noto Serif JP (glyphes japonais : kanji, haïku). */
+  --font-display: "Fraunces", "Times New Roman", Georgia, serif;
+  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-ui: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  --font-jp: "Noto Serif JP", "Noto Serif", serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", monospace;
+
+  --fs-display: clamp(2.5rem, 5vw, 5rem);
+  --fs-hero: clamp(3rem, 6vw, 6rem);
+  --fs-h1: clamp(2.4rem, 5vw, 4.5rem);
+  --fs-h2: clamp(1.7rem, 2.6vw, 2.4rem);
+  --fs-h3: 1.4rem;
+  --fs-body: 1.15rem;
+  --fs-ui: 0.82rem;
+  --fs-small: 0.72rem;
+  --ls-ui: 0.12em;
+  --ls-wide: 0.32em;
+  --ls-display: -0.025em;
+  --lh-body: 1.85;
+
+  /* --- Espacement (base 8px) --- */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 32px;
+  --space-lg: 64px;
+  --space-xl: 128px;
+  --space-2xl: 256px;
+
+  /* --- Grille --- */
+  --container: 1440px;
+  --content: 1140px;
+  --measure: 680px;       /* largeur de lecture optimale */
+  --gutter: 32px;
+
+  /* --- Divers --- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.18);
+  --nav-h: 76px;
+
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-inout: cubic-bezier(0.76, 0, 0.24, 1);
+  --t-fast: 0.2s;
+  --t-base: 0.3s;
+  --t-slow: 0.5s;
+
+  --z-cursor: 9999;
+  --z-overlay: 1000;
+  --z-nav: 900;
+  --z-progress: 950;
+
+  color-scheme: light;
+}

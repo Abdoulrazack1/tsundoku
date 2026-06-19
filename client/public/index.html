@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tsundoku — Journal de lectures</title>
+  <meta name="description" content="Chroniques de livres et journal de lecture. Une expérience de lecture contemplative, inspirée de l'esthétique japonaise du ma et du wabi-sabi.">
+  <meta property="og:title" content="Tsundoku — Journal de lectures">
+  <meta property="og:description" content="Chroniques de livres et journal de lecture.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Space+Grotesk:wght@300..700&family=Noto+Serif+JP:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/reset.css">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/typography.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/dark-mode.css">
+  <link rel="stylesheet" href="/assets/css/pages/home.css">
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.0.11/dist/purify.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <div data-navbar></div>
+
+  <main id="main">
+    <!-- Section 2 : Hero éditorial -->
+    <header class="hero" id="hero">
+      <div class="hero__watermark" aria-hidden="true">読</div>
+      <div class="container hero__grid">
+        <div class="hero__text" id="hero-content"><div class="spinner"></div></div>
+        <div class="hero__object" id="hero-object"></div>
+      </div>
+      <div class="hero__scroll scroll-cue" aria-hidden="true"><span class="eyebrow">Défiler</span><span class="scroll-cue__line"></span></div>
+    </header>
+
+    <!-- Section 3 : Articles récents -->
+    <section class="section container">
+      <div class="section-head between">
+        <div>
+          <p class="kicker">Dernières lectures</p>
+          <h2 class="section-head__title font-display">Chroniques récentes</h2>
+        </div>
+        <a class="btn btn--sm" href="/articles.html">Toutes les chroniques
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="recent-grid" id="recent-grid"><div class="spinner"></div></div>
+    </section>
+
+    <!-- Section 4 : En ce moment je lis -->
+    <section class="section--tight container">
+      <div id="now-reading"></div>
+    </section>
+
+    <!-- Section 5 : Sélection par genre -->
+    <section class="section container">
+      <div class="section-head"><p class="kicker">Explorer</p><h2 class="section-head__title font-display">Par genre</h2></div>
+      <div class="genre-row" id="genre-row"></div>
+    </section>
+
+    <!-- Section 6 : Newsletter -->
+    <section class="section">
+      <div class="content newsletter reveal">
+        <p class="kicker">Rejoindre la pile</p>
+        <h2 class="newsletter__title">La lettre des lectures</h2>
+        <p class="newsletter__sub">Une fois par mois : les nouvelles chroniques, les coups de cœur, et un peu de silence entre les mots.</p>
+        <form class="newsletter__form js-newsletter" novalidate>
+          <input class="input" type="email" name="email" placeholder="votre@email.fr" required aria-label="Adresse email">
+          <button class="btn btn--solid" type="submit">S'abonner</button>
+        </form>
+        <p class="newsletter__msg" role="status"></p>
+      </div>
+    </section>
+  </main>
+
+  <div data-footer></div>
+
+  <script type="module" src="/assets/js/main.js"></script>
+  <script type="module" src="/assets/js/pages/home.js"></script>
+</body>
+</html>

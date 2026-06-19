@@ -1,0 +1,60 @@
+/* Page article — cf. §5.3 */
+
+.article-hero { text-align: center; padding-top: calc(var(--nav-h) + var(--space-lg)); }
+.article-hero__meta { color: var(--muted); font-size: var(--fs-ui); letter-spacing: 0.04em; }
+.article-hero__title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-h1); line-height: 1.08; margin-block: var(--space-md); }
+.article-hero__byline { display: flex; gap: var(--space-sm); justify-content: center; flex-wrap: wrap; color: var(--muted); font-family: var(--font-ui); font-size: var(--fs-ui); }
+.article-hero__byline span:not(:last-child)::after { content: "·"; margin-left: var(--space-sm); }
+.article-cover { max-width: 800px; margin: var(--space-lg) auto 0; border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); }
+
+.article-layout { display: grid; grid-template-columns: 1fr minmax(0, var(--measure)) 1fr; gap: var(--space-md); margin-top: var(--space-xl); }
+.article-body { grid-column: 2; }
+.article-sidebar { grid-column: 3; position: sticky; top: calc(var(--nav-h) + var(--space-md)); align-self: start; padding-left: var(--space-md); display: flex; flex-direction: column; gap: var(--space-md); max-width: 260px; }
+.toc { font-family: var(--font-ui); font-size: var(--fs-ui); }
+.toc h4, .sidebar-card h4 { font-size: var(--fs-small); letter-spacing: var(--ls-ui); text-transform: uppercase; color: var(--muted); margin-bottom: var(--space-sm); }
+.toc a { display: block; padding: 6px 0 6px 12px; border-left: 1px solid var(--line); color: var(--muted); transition: all var(--t-fast); }
+.toc a:hover, .toc a.is-active { color: var(--color-accent); border-left-color: var(--color-accent); }
+.sidebar-card { padding: var(--space-sm); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.sidebar-card dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: var(--fs-ui); }
+.sidebar-card dt { color: var(--muted); }
+.share-btns { display: flex; gap: 8px; }
+
+@media (max-width: 1024px) {
+  .article-layout { grid-template-columns: 1fr; }
+  .article-body { grid-column: 1; margin-inline: auto; }
+  .article-sidebar { display: none; }
+}
+
+/* Citation extraite (toolbar de partage de sélection) */
+.selection-share { position: absolute; z-index: var(--z-overlay); background: var(--ink); color: var(--bg); padding: 8px 12px; border-radius: var(--radius-sm); display: flex; gap: 8px; font-size: var(--fs-small); box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transform: translateY(8px); transition: all var(--t-fast); }
+.selection-share.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+/* Lecteur audio (Web Speech API) — §21.6 */
+.audio-player { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); border: 1px solid var(--line); border-radius: 999px; background: var(--surface); margin: var(--space-lg) auto 0; max-width: 520px; }
+.audio-player__btn { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; flex: none; transition: transform var(--t-fast); }
+.audio-player__btn:hover { transform: scale(1.05); }
+.audio-player__main { flex: 1; min-width: 0; }
+.audio-player__label { font-size: var(--fs-ui); color: var(--muted); display: block; }
+.audio-player__bar { height: 3px; border-radius: 999px; background: var(--line); margin-top: 8px; overflow: hidden; }
+.audio-player__bar > div { height: 100%; width: 0; background: var(--color-accent); transition: width 0.2s linear; }
+.audio-player__sel { border: 1px solid var(--line); background: var(--surface); font-size: var(--fs-small); color: var(--ink); border-radius: 999px; padding: 6px 10px; cursor: pointer; }
+.audio-player select { border: none; background: transparent; font-size: var(--fs-ui); color: var(--ink); }
+
+/* Navigation inter-articles */
+.article-nav { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gutter); margin-top: var(--space-xl); }
+.article-nav__card { display: flex; gap: var(--space-sm); align-items: center; padding: var(--space-sm); border: 1px solid var(--line); border-radius: var(--radius-sm); transition: all var(--t-base); }
+.article-nav__card:hover { background: var(--surface); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.article-nav__card.next { text-align: right; flex-direction: row-reverse; }
+.article-nav__card img { width: 64px; height: 64px; object-fit: cover; border-radius: 4px; }
+.article-nav__dir { font-size: var(--fs-small); color: var(--muted); text-transform: uppercase; letter-spacing: var(--ls-ui); }
+@media (max-width: 600px) { .article-nav { grid-template-columns: 1fr; } }
+
+/* Livre 3D (Three.js) */
+.book-3d { width: 100%; height: 360px; }
+
+/* Mode Zen — §21.5 */
+body.zen .navbar, body.zen .footer, body.zen .article-sidebar, body.zen .article-nav, body.zen .audio-player, body.zen .article-cover { display: none !important; }
+body.zen .article-body { max-width: 720px; }
+.zen-toggle { position: fixed; bottom: var(--space-md); left: var(--space-md); z-index: var(--z-nav); width: 48px; height: 48px; border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; box-shadow: var(--shadow-lg); }
+.zen-controls { position: fixed; top: var(--space-md); right: var(--space-md); z-index: var(--z-nav); display: none; gap: 8px; background: var(--surface); padding: 8px; border-radius: 999px; box-shadow: var(--shadow-md); }
+body.zen .zen-controls { display: flex; }

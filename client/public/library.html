@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bibliothèque — Tsundoku</title>
+  <meta name="description" content="Tous mes livres et mangas, organisés : lus, en cours, à lire.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Space+Grotesk:wght@300..700&family=Noto+Serif+JP:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/reset.css">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/typography.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/dark-mode.css">
+  <link rel="stylesheet" href="/assets/css/pages/library.css">
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <div data-navbar></div>
+
+  <main id="main" class="library">
+    <header class="page-head container">
+      <p class="kicker">La collection</p>
+      <h1 class="page-head__title">Ma Bibliothèque</h1>
+      <p class="page-head__sub">Tous mes livres et mangas, organisés — du roman lu d'une traite à la pile patiente du « à lire ».</p>
+      <hr class="rule">
+    </header>
+
+    <section class="section--tight container">
+      <div class="library-toolbar">
+        <div class="filter-group" id="status-filters"></div>
+        <div class="filter-group">
+          <input class="input" id="lib-search" type="search" placeholder="Rechercher un titre, un auteur…" style="width:240px" aria-label="Rechercher">
+          <select class="select select--inline" id="lib-sort" aria-label="Trier">
+            <option value="newest">Récemment ajoutés</option>
+            <option value="title">Titre A→Z</option>
+            <option value="author">Auteur A→Z</option>
+            <option value="top_rated">Mieux notés</option>
+          </select>
+          <div class="view-toggle" role="group" aria-label="Affichage">
+            <button data-view="grid" class="is-active" aria-label="Grille"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+            <button data-view="list" aria-label="Liste"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
+            <button data-view="shelf" aria-label="Étagère 3D"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4v16M8 4v16M12 4v16M16 6v14M20 8v12"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div id="shelf-3d" aria-hidden="true"></div>
+      <div class="books-grid" id="books-grid"><div class="spinner"></div></div>
+    </section>
+  </main>
+
+  <div data-footer></div>
+  <script type="module" src="/assets/js/main.js"></script>
+  <script type="module" src="/assets/js/pages/library.js"></script>
+</body>
+</html>

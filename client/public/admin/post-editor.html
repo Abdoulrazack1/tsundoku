@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Éditeur d'article — Tsundoku Admin</title>
+  <meta name="robots" content="noindex">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Newsreader:opsz,wght@6..72,300..600&family=Space+Grotesk:wght@300..700&family=Noto+Serif+JP:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/reset.css">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/typography.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/dark-mode.css">
+  <link rel="stylesheet" href="/assets/css/pages/admin.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.30.5/dist/editorjs.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.8.7/dist/header.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.10.0/dist/list.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@2.7.2/dist/quote.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@1.4.2/dist/delimiter.umd.min.js"></script>
+</head>
+<body>
+  <div class="admin">
+    <div data-admin-sidebar></div>
+    <main class="admin-main">
+      <header class="admin-header">
+        <h1 class="font-display" id="editor-heading">Nouvel article</h1>
+        <a class="btn btn--sm" href="/admin/dashboard.html">← Retour</a>
+      </header>
+
+      <div class="editor-grid">
+        <div>
+          <input class="editor-title" id="post-title" placeholder="Titre de la chronique…">
+          <div id="editorjs"></div>
+        </div>
+
+        <aside class="editor-aside">
+          <div class="editor-panel">
+            <h4>Couverture</h4>
+            <img id="cover-preview" alt="" style="width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:6px;background:var(--line);display:none;margin-bottom:12px">
+            <div class="editor-actions">
+              <label class="btn btn--sm btn--block" style="cursor:pointer">Téléverser une image
+                <input type="file" id="cover-file" accept="image/*" hidden>
+              </label>
+              <details>
+                <summary class="btn btn--sm btn--block" style="list-style:none">Chercher sur Anilist</summary>
+                <div style="margin-top:10px">
+                  <input class="input" id="anilist-q" placeholder="Titre du manga…">
+                  <button class="btn btn--sm btn--block" id="anilist-search" style="margin-top:8px">Rechercher</button>
+                  <div id="anilist-results" style="margin-top:10px;display:grid;gap:8px;max-height:280px;overflow:auto"></div>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <div class="editor-panel">
+            <h4>Livre lié</h4>
+            <select class="select" id="book-select"><option value="">— Aucun —</option></select>
+          </div>
+
+          <div class="editor-panel">
+            <h4>Catégories</h4>
+            <div class="checks" id="cat-checks"></div>
+          </div>
+
+          <div class="editor-panel">
+            <h4>Tags</h4>
+            <input class="input" id="post-tags" placeholder="murakami, tokyo, mélancolie">
+          </div>
+
+          <div class="editor-panel">
+            <h4>Extrait</h4>
+            <textarea class="textarea" id="post-excerpt" rows="3" placeholder="2-3 lignes d'introduction…"></textarea>
+          </div>
+
+          <div class="editor-panel">
+            <h4>Référencement (SEO)</h4>
+            <div class="field"><label for="meta-title">Meta titre</label><input class="input" id="meta-title"></div>
+            <div class="field" style="margin-top:8px"><label for="meta-desc">Meta description</label><textarea class="textarea" id="meta-desc" rows="2"></textarea></div>
+          </div>
+
+          <div class="editor-panel">
+            <h4>Publication</h4>
+            <div class="checks">
+              <label><input type="radio" name="status" value="draft" checked> Brouillon</label>
+              <label><input type="radio" name="status" value="published"> Publié</label>
+              <label style="margin-top:8px"><input type="checkbox" id="featured"> Mettre en avant sur l'accueil</label>
+            </div>
+            <div class="editor-actions" style="margin-top:12px">
+              <button class="btn btn--solid btn--block" id="save-btn">Enregistrer</button>
+              <button class="btn btn--sm btn--block" id="delete-btn" style="border-color:#e74c3c;color:#e74c3c;display:none">Supprimer</button>
+            </div>
+            <p class="field__error" id="editor-msg" role="status"></p>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="/assets/js/pages/admin/editor.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+/* Page auteur & À propos & Stats — §5.6, §5.10, §5.11 */
+
+.author-hero { padding-top: calc(var(--nav-h) + var(--space-xl)); display: grid; grid-template-columns: 180px 1fr; gap: var(--space-lg); align-items: center; }
+.author-hero__avatar { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; background: var(--line); display: grid; place-items: center; font-family: var(--font-display); font-size: 4rem; color: var(--muted); box-shadow: var(--shadow-md); }
+.author-hero__name { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.5rem); }
+.author-hero__meta { color: var(--muted); margin-top: 8px; }
+.author-stats { display: flex; gap: var(--space-lg); margin-top: var(--space-md); }
+.author-stats .stat-num { font-family: var(--font-display); font-size: 2rem; color: var(--color-accent); }
+.author-stats .stat-label { font-size: var(--fs-small); color: var(--muted); text-transform: uppercase; letter-spacing: var(--ls-ui); }
+@media (max-width: 640px) { .author-hero { grid-template-columns: 1fr; text-align: center; } .author-hero__avatar { margin-inline: auto; } .author-stats { justify-content: center; } }
+
+/* ---- Stats / En chiffres ---- */
+.stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md); }
+.stat-card { padding: var(--space-md); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); text-align: center; }
+.stat-card__num { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 3.6rem); color: var(--color-accent); line-height: 1; }
+.stat-card__label { font-size: var(--fs-ui); color: var(--muted); margin-top: 8px; }
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-top: var(--space-xl); }
+.chart-box { padding: var(--space-md); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+.chart-box h3 { font-size: var(--fs-h3); margin-bottom: var(--space-md); }
+.chart-box canvas { max-height: 320px; }
+@media (max-width: 760px) { .charts-grid { grid-template-columns: 1fr; } }
+
+/* ---- À propos ---- */
+.about-hero { position: relative; min-height: 70vh; display: flex; align-items: center; background: var(--color-ink); color: var(--color-ink-light); overflow: hidden; }
+.about-hero__tategaki { position: absolute; right: 5%; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; font-family: var(--font-serif); font-weight: 700; font-size: clamp(6rem, 22vw, 18rem); color: rgba(245,240,232,0.06); line-height: 1; user-select: none; }
+.about-hero__title { font-family: var(--font-display); font-size: clamp(3rem, 8vw, 6rem); position: relative; }
+.manifesto { max-width: var(--measure); margin-inline: auto; }
+.book-pile { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.book-pile .spine { width: clamp(180px, 40vw, 320px); height: 26px; border-radius: 3px; background: var(--ink); color: var(--bg); display: flex; align-items: center; padding-inline: 14px; font-size: var(--fs-small); letter-spacing: 0.05em; box-shadow: var(--shadow-sm); opacity: 0; }
+.book-pile .spine.is-in { animation: bookFall 0.6s var(--ease-out) both; }

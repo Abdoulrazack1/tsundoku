@@ -1,0 +1,110 @@
+/* Typographie — cf. §2.3 */
+
+/* Fond washi : chaleur papier organique via gradients (léger, GPU-friendly).
+   La nuance vient de la couleur off-white + un voile radial très subtil. */
+body {
+  font-family: var(--font-ui);
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--ink);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(120% 80% at 15% 0%, rgba(255, 252, 245, 0.6), transparent 60%),
+    radial-gradient(120% 90% at 100% 100%, rgba(200, 188, 168, 0.18), transparent 55%);
+  background-repeat: no-repeat;
+}
+[data-theme="dark"] body {
+  background-image:
+    radial-gradient(120% 80% at 15% 0%, rgba(40, 36, 30, 0.5), transparent 60%),
+    radial-gradient(120% 90% at 100% 100%, rgba(0, 0, 0, 0.4), transparent 55%);
+}
+
+.font-display { font-family: var(--font-display); }
+.font-serif { font-family: var(--font-serif); }
+.font-ui { font-family: var(--font-ui); }
+.font-mono { font-family: var(--font-mono); }
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.1; letter-spacing: var(--ls-display); }
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-display);
+  line-height: 1.05;
+  letter-spacing: var(--ls-display);
+}
+
+.tagline {
+  font-family: var(--font-ui);
+  font-weight: 100;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-weight: 300;
+  font-size: var(--fs-ui);
+  letter-spacing: var(--ls-ui);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.kicker {
+  font-family: var(--font-ui);
+  font-weight: 400;
+  font-size: var(--fs-small);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* Corps de texte éditorial (article) */
+.prose {
+  font-family: var(--font-serif);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+}
+.prose > * + * { margin-top: 1.5em; }
+.prose h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-h2);
+  line-height: 1.2;
+  margin-top: 2em;
+  padding-left: var(--space-sm);
+  border-left: 3px solid var(--color-accent);
+}
+.prose h3 { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h3); margin-top: 1.6em; }
+.prose blockquote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--ink);
+  padding: var(--space-md) var(--space-sm);
+  margin-inline: auto;
+  max-width: 90%;
+  position: relative;
+}
+.prose blockquote::before {
+  content: "”";
+  font-family: var(--font-display);
+  font-size: 4rem;
+  color: rgba(var(--color-accent-rgb), 0.25);
+  position: absolute;
+  top: -0.2em;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.prose a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.prose em { font-style: italic; }
+.prose strong { font-weight: 700; }
+.prose figcaption, .caption { font-family: var(--font-ui); font-size: var(--fs-ui); color: var(--muted); text-align: center; margin-top: var(--space-xs); }
+
+.text-accent { color: var(--color-accent); }
+.text-muted { color: var(--muted); }

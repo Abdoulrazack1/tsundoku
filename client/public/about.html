@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>À propos — Tsundoku</title>
+  <meta name="description" content="Derrière Tsundoku : une philosophie de lecture contemplative, inspirée du ma et du wabi-sabi.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Space+Grotesk:wght@300..700&family=Noto+Serif+JP:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/css/reset.css">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/typography.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/dark-mode.css">
+  <style>
+    .about-hero { background: var(--color-ink); color: var(--color-ink-light); min-height: 80vh; display: grid; place-items: center; position: relative; overflow: hidden; text-align: center; }
+    .about-hero__tate { position: absolute; right: 4vw; top: 50%; transform: translateY(-50%); writing-mode: vertical-rl; font-family: var(--font-jp); font-size: clamp(10rem, 28vw, 26rem); color: #fff; opacity: 0.06; pointer-events: none; }
+    .about-hero__title { font-family: var(--font-display); font-weight: 300; font-size: clamp(3rem, 9vw, 7rem); line-height: 1; letter-spacing: var(--ls-display); }
+    .about-hero__sub { font-family: var(--font-serif); font-style: italic; font-size: 1.3rem; color: rgba(245,240,232,0.6); margin-top: var(--space-md); }
+    .manifesto { max-width: var(--measure); margin: 0 auto; }
+    .manifesto p { font-family: var(--font-serif); font-size: 1.3rem; line-height: 1.8; }
+    .manifesto p + p { margin-top: 1.4em; }
+    .drop::first-letter { font-family: var(--font-display); font-size: 4.5rem; float: left; line-height: 0.8; padding: 6px 12px 0 0; color: var(--color-accent); }
+    .process { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); }
+    .process__step { border-top: 2px solid var(--color-accent); padding-top: var(--space-sm); }
+    .process__num { font-family: var(--font-mono); color: var(--color-accent); font-size: var(--fs-small); }
+    .process__step h3 { font-family: var(--font-display); font-size: 1.5rem; margin-block: 8px; }
+    .process__step p { color: var(--muted); }
+    .contact-form { max-width: 560px; margin: var(--space-lg) auto 0; display: grid; gap: var(--space-sm); }
+    .pile { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: var(--space-lg); }
+    .pile__book { width: clamp(160px, 30vw, 240px); height: 22px; border-radius: 3px; box-shadow: var(--shadow-sm); }
+    @media (max-width: 700px) { .process { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <div data-navbar></div>
+
+  <main id="main">
+    <header class="about-hero">
+      <div class="about-hero__tate" aria-hidden="true">積読</div>
+      <div>
+        <p class="kicker" style="color:var(--color-accent)">Derrière les mots</p>
+        <h1 class="about-hero__title">À propos</h1>
+        <p class="about-hero__sub">Une passion, une pile, et beaucoup de silence.</p>
+      </div>
+    </header>
+
+    <section class="section container">
+      <div class="manifesto">
+        <p class="reveal drop">Tsundoku — 積ん読 — désigne l'art d'accumuler des livres sans les lire. Une pile de promesses qui grandit sur la table de chevet. Ce journal est l'antidote : l'endroit où ces promesses deviennent des expériences, où chaque livre lu devient une trace partagée.</p>
+        <p class="reveal">On y cherche moins la quantité que la justesse. Une chronique n'est pas une note sur cinq : c'est une tentative d'attraper ce qu'un livre a laissé en nous — une saison, une phrase, un silence. La lecture est un acte lent, contemplatif, et ce site essaie de lui rendre cette lenteur.</p>
+        <p class="reveal">L'esthétique s'inspire du <em>ma</em> (間), l'intervalle chargé de sens, et du <em>wabi-sabi</em> (侘寂), la beauté de l'imparfait. Le blanc n'est pas du vide : c'est une respiration.</p>
+      </div>
+
+      <div class="pile reveal" aria-hidden="true">
+        <span class="pile__book" style="background:#2c3e50"></span>
+        <span class="pile__book" style="background:#c0392b;width:clamp(140px,26vw,210px)"></span>
+        <span class="pile__book" style="background:#e67e22;width:clamp(170px,32vw,255px)"></span>
+        <span class="pile__book" style="background:#27543a;width:clamp(150px,28vw,225px)"></span>
+        <span class="pile__book" style="background:#1a1a1a"></span>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-head"><p class="kicker">La méthode</p><h2 class="section-head__title font-display">Le processus d'une chronique</h2></div>
+      <div class="process">
+        <div class="process__step reveal"><span class="process__num">01</span><h3>Lire lentement</h3><p>Sans objectif de productivité. On souligne, on corne, on laisse reposer.</p></div>
+        <div class="process__step reveal" data-delay="0.1"><span class="process__num">02</span><h3>Laisser infuser</h3><p>Quelques jours, parfois des semaines. Ce qui reste après l'oubli est l'essentiel.</p></div>
+        <div class="process__step reveal" data-delay="0.2"><span class="process__num">03</span><h3>Écrire juste</h3><p>Une chronique honnête, jamais un résumé. L'émotion d'abord, l'analyse ensuite.</p></div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-head" style="text-align:center"><p class="kicker">Échanger</p><h2 class="section-head__title font-display">Me contacter</h2></div>
+      <form class="contact-form js-contact" novalidate>
+        <div class="field"><label for="c-name">Nom</label><input class="input" id="c-name" name="name" required></div>
+        <div class="field"><label for="c-email">Email</label><input class="input" id="c-email" type="email" name="email" required></div>
+        <div class="field"><label for="c-msg">Message</label><textarea class="textarea" id="c-msg" name="message" rows="5" required></textarea></div>
+        <button class="btn btn--solid" type="submit">Envoyer le message</button>
+        <p class="newsletter__msg" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <div data-footer></div>
+  <script type="module" src="/assets/js/main.js"></script>
+  <script type="module" src="/assets/js/pages/about.js"></script>
+</body>
+</html>
