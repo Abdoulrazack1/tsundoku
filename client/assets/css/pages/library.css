@@ -38,7 +38,15 @@
 .book-detail__cover-wrap { position: sticky; top: calc(var(--nav-h) + var(--space-md)); align-self: start; }
 .book-detail__cover { aspect-ratio: 2/3; border-radius: 6px; box-shadow: var(--shadow-lg); object-fit: cover; width: 100%; }
 .book-detail__title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; }
+.book-detail__orig { font-family: var(--font-jp); color: var(--muted); margin-top: 4px; font-size: 1.05rem; }
 .book-detail__author { font-size: 1.2rem; color: var(--muted); margin-top: 8px; }
+
+/* Galerie de couvertures / planches */
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-md); }
+.gallery-item { margin: 0; }
+.gallery-item img { width: 100%; border-radius: 4px; box-shadow: var(--shadow-md); cursor: zoom-in; border: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent); transition: transform var(--t-base) var(--ease-out); }
+.gallery-item img:hover { transform: translateY(-4px); }
+.gallery-item figcaption { font-size: var(--fs-small); color: var(--muted); margin-top: 6px; letter-spacing: 0.04em; }
 .book-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--space-md); margin-block: var(--space-lg); padding-block: var(--space-md); border-block: 1px solid var(--line); }
 .book-meta-grid dt { font-size: var(--fs-small); text-transform: uppercase; letter-spacing: var(--ls-ui); color: var(--muted); }
 .book-meta-grid dd { font-family: var(--font-display); font-size: 1.2rem; margin-top: 4px; }
