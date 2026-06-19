@@ -31,6 +31,7 @@ const env = {
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   logLevel: process.env.LOG_LEVEL || 'info',
   inkoBase: process.env.INKO_BASE || 'http://127.0.0.1:8088/api',
+  anilistUser: process.env.ANILIST_USERNAME || '',
 
   seed: {
     adminEmail: process.env.SEED_ADMIN_EMAIL || 'admin@tsundoku.app',

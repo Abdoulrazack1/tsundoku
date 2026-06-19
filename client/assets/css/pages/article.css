@@ -63,6 +63,13 @@
 .rating-axis__val { font-family: var(--font-display); font-size: 1.6rem; color: var(--color-accent); line-height: 1.1; }
 .spoiler-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--color-ink); color: var(--color-ink-light); font-size: var(--fs-small); letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }
 
+/* Rideau anti-spoilers */
+.spoiler-reveal { display: block; width: 100%; max-width: var(--measure); margin: var(--space-md) auto; padding: 16px; border: 1px dashed var(--color-accent); border-radius: var(--radius-sm); background: rgba(var(--color-accent-rgb), 0.05); color: var(--ink); font-family: var(--font-ui); font-size: var(--fs-ui); letter-spacing: 0.04em; cursor: pointer; transition: background var(--t-fast); }
+.spoiler-reveal:hover { background: rgba(var(--color-accent-rgb), 0.12); }
+.article-body.spoiler-hidden { filter: blur(7px); user-select: none; pointer-events: none; opacity: 0.7; }
+.article-body { transition: filter var(--t-slow), opacity var(--t-slow); }
+.article-body img { cursor: zoom-in; }
+
 /* Livre 3D (Three.js) */
 .book-3d { width: 100%; height: 360px; }
 

@@ -205,6 +205,18 @@
 .skip-link { position: absolute; left: 8px; top: -60px; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 4px; z-index: var(--z-cursor); transition: top var(--t-base); }
 .skip-link:focus { top: 8px; }
 
+/* Lightbox (planches / images) */
+.lightbox { position: fixed; inset: 0; z-index: var(--z-overlay); background: rgba(13,10,8,0.94); display: grid; place-items: center; padding: 4vh 4vw; opacity: 0; visibility: hidden; transition: opacity var(--t-base); cursor: zoom-out; }
+.lightbox.is-open { opacity: 1; visibility: visible; }
+.lightbox img { max-width: 100%; max-height: 92vh; border-radius: 4px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+.lightbox__close { position: absolute; top: 20px; right: 24px; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #fff; font-size: 1.2rem; }
+.lightbox__close:hover { background: var(--color-accent); }
+
+/* Bouton retour-haut */
+.to-top { position: fixed; bottom: var(--space-md); right: var(--space-md); width: 46px; height: 46px; border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; z-index: var(--z-nav); box-shadow: var(--shadow-lg); opacity: 0; transform: translateY(16px) scale(0.9); pointer-events: none; transition: all var(--t-base) var(--ease-out); }
+.to-top.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+.to-top:hover { background: var(--color-accent); }
+
 /* ============================================================
    IDENTITÉ MANGA — trame (screentone), panneaux, sceau hanko
    (palette inchangée : washi / sumi / vermillon)

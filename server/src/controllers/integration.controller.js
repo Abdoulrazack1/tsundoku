@@ -3,7 +3,16 @@
 const asyncHandler = require('../utils/asyncHandler');
 const anilistService = require('../services/anilist.service');
 const inkoService = require('../services/inko.service');
+const env = require('../config/env');
 const { AppError } = require('../middlewares/error.middleware');
+
+/* ---- Liste Anilist de l'utilisateur (son classement public) ---- */
+const anilistUser = asyncHandler(async (req, res) => {
+  const name = (req.query.name || env.anilistUser || '').trim();
+  if (!name) return res.json({ configured: false, entries: [] });
+  const data = await anilistService.getUserList(name);
+  res.json({ configured: true, username: name, ...data });
+});
 
 /* ---- Anilist (métadonnées riches : genres, format, staff) ---- */
 const searchAnilist = asyncHandler(async (req, res) => {
@@ -16,7 +25,7 @@ const searchAnilist = asyncHandler(async (req, res) => {
 const searchInko = asyncHandler(async (req, res) => {
   const q = (req.query.q || '').trim();
   if (!q) throw new AppError('Paramètre "q" requis.', 400);
-  res.json({ results: await inkoService.search(q) });
+  res.json({ results: await inkoService.search(q, { source: req.query.source }) });
 });
 
 const inkoManga = asyncHandler(async (req, res) => {
@@ -43,4 +52,4 @@ const syncInko = asyncHandler(async (req, res) => {
   res.json({ message: up ? 'Inko connecté. Recherche & import opérationnels.' : 'Inko hors ligne.', up });
 });
 
-module.exports = { searchAnilist, searchInko, inkoManga, inkoChapters, inkoPages, inkoHealth, syncAnilist, syncInko };
+module.exports = { searchAnilist, anilistUser, searchInko, inkoManga, inkoChapters, inkoPages, inkoHealth, syncAnilist, syncInko };

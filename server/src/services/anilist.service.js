@@ -52,4 +52,58 @@ async function searchManga(query, { perPage = 8 } = {}) {
   }));
 }
 
-module.exports = { searchManga };
+/**
+ * Récupère la liste manga publique d'un utilisateur Anilist (là où il « rank »).
+ * Aucune authentification requise si le profil/listes sont publics.
+ */
+async function getUserList(username) {
+  const gql = `
+    query ($name: String) {
+      MediaListCollection(userName: $name, type: MANGA) {
+        lists {
+          name
+          entries {
+            score(format: POINT_10_DECIMAL)
+            status
+            progress
+            media { id title { romaji english native } coverImage { large } genres averageScore chapters volumes }
+          }
+        }
+      }
+      User(name: $name) { name avatar { large } siteUrl statistics { manga { count chaptersRead meanScore } } }
+    }`;
+  const resp = await fetch(ANILIST_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ query: gql, variables: { name: username } }),
+  });
+  if (!resp.ok) {
+    logger.warn(`[anilist] liste user ${resp.status}`);
+    throw new Error(resp.status === 404 ? 'Utilisateur Anilist introuvable ou listes privées.' : `Anilist a répondu ${resp.status}`);
+  }
+  const json = await resp.json();
+  if (json.errors) throw new Error(json.errors[0]?.message || 'Erreur Anilist.');
+
+  const lists = json?.data?.MediaListCollection?.lists || [];
+  const byId = new Map();
+  const STATUS = { CURRENT: 'en_cours', COMPLETED: 'lu', PLANNING: 'a_lire', DROPPED: 'abandonne', PAUSED: 'pause', REPEATING: 'relu' };
+  lists.forEach((l) => (l.entries || []).forEach((e) => {
+    const m = e.media; if (!m || byId.has(m.id)) return;
+    byId.set(m.id, {
+      anilist_id: m.id,
+      title: m.title.english || m.title.romaji || m.title.native,
+      cover_image_url: m.coverImage?.large || null,
+      score: e.score || 0,
+      status: STATUS[e.status] || 'a_lire',
+      progress: e.progress || 0,
+      genres: m.genres || [],
+      chapters: m.chapters || null,
+      volumes: m.volumes || null,
+    });
+  }));
+  const entries = [...byId.values()].sort((a, b) => b.score - a.score);
+  const user = json?.data?.User || null;
+  return { user, entries };
+}
+
+module.exports = { searchManga, getUserList };

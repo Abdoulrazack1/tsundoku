@@ -10,6 +10,7 @@ import { initScrollReveal } from './animations/scroll-reveal.js';
 import { initPageTransition } from './animations/page-transition.js';
 import { initSmoothScroll } from './animations/smooth-scroll.js';
 import { initMagnetic } from './animations/magnetic.js';
+import { initFeatures } from './components/features.js';
 import { qs } from './core/utils.js';
 
 // Thème appliqué le plus tôt possible (évite le flash)
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNewsletter();
   initCursor();
   initMagnetic();
+  initFeatures();
   initPageTransition();
   initScrollReveal();
 

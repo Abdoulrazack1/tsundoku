@@ -5,6 +5,7 @@ const ctrl = require('../controllers/integration.controller');
 const { requireAuth } = require('../middlewares/auth.middleware');
 
 // Anilist
+router.get('/anilist/user', ctrl.anilistUser); // classement public de l'utilisateur
 router.get('/anilist/search', requireAuth, ctrl.searchAnilist);
 router.post('/anilist/sync', requireAuth, ctrl.syncAnilist);
 

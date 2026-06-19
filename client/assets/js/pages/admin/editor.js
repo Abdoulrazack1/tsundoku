@@ -155,11 +155,12 @@ function initInkoPicker() {
   const status = qs('#inko-status');
   const setStatus = (t) => { status.textContent = t || ''; };
 
+  const SOURCE = 'weebcentral';
   async function doSearch() {
     const q = qs('#inko-q').value.trim(); if (!q) return;
-    box.innerHTML = '<div class="spinner"></div>'; setStatus('Recherche dans Inko…');
+    box.innerHTML = '<div class="spinner"></div>'; setStatus('Recherche sur Weeb Central…');
     try {
-      const { results } = await api.auth.get(`/integration/inko/search?q=${encodeURIComponent(q)}`);
+      const { results } = await api.auth.get(`/integration/inko/search?q=${encodeURIComponent(q)}&source=${SOURCE}`);
       setStatus(`${results.length} résultat(s)`);
       box.innerHTML = results.map((r, i) => `<button class="inko-pick" data-i="${i}" style="display:flex;gap:8px;align-items:center;text-align:left;padding:6px;border:1px solid var(--line);border-radius:6px">
         <img src="${escapeHtml(r.cover_image_url || '')}" style="width:32px;height:46px;object-fit:cover;border-radius:3px;flex:none" alt="" loading="lazy">

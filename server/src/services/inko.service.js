@@ -37,16 +37,16 @@ function normItem(m, source) {
   };
 }
 
-/** Recherche multi-sources (par défaut) ou sur la source par défaut. */
-async function search(q, { all = true } = {}) {
-  if (all) {
-    const data = await call(`/search-all?q=${encodeURIComponent(q)}&limit=8`);
-    const results = [];
-    (data.groups || []).forEach((g) => (g.items || []).forEach((it) => results.push(normItem(it, g.source))));
-    return results;
+/** Recherche : sur une source précise (ex: weebcentral) ou multi-sources. */
+async function search(q, { source } = {}) {
+  if (source) {
+    const data = await call(`/sources/${source}/mangas/search?q=${encodeURIComponent(q)}&limit=18`);
+    return (data.results || []).map((m) => normItem(m, source));
   }
-  const data = await call(`/mangas/search?q=${encodeURIComponent(q)}&limit=12`);
-  return (data.results || []).map((m) => normItem(m));
+  const data = await call(`/search-all?q=${encodeURIComponent(q)}&limit=8`);
+  const results = [];
+  (data.groups || []).forEach((g) => (g.items || []).forEach((it) => results.push(normItem(it, g.source))));
+  return results;
 }
 
 async function getManga(id, source) {

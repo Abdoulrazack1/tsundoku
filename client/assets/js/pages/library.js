@@ -65,6 +65,28 @@ function initControls() {
   qsa('.view-toggle button').forEach((b) => b.addEventListener('click', () => setView(b.dataset.view)));
 }
 
+async function loadAnilistRanking() {
+  try {
+    const data = await api.get('/integration/anilist/user');
+    if (!data.configured || !data.entries?.length) return;
+    const sec = qs('#anilist-section');
+    const rail = qs('#anilist-rail');
+    qs('#anilist-title').textContent = `Sur Anilist — ${data.username}`;
+    if (data.user?.siteUrl) qs('#anilist-profile').href = data.user.siteUrl;
+    const STAT = { lu: 'Lu', en_cours: 'En cours', a_lire: 'À lire', abandonne: 'Abandonné', pause: 'En pause', relu: 'Relu' };
+    rail.innerHTML = data.entries.slice(0, 24).map((e) => `
+      <a class="ani-card" href="https://anilist.co/manga/${e.anilist_id}" target="_blank" rel="noopener" title="${e.title.replace(/"/g, '')}">
+        <div class="ani-card__cover"><img src="${e.cover_image_url || ''}" alt="" loading="lazy">
+          ${e.score ? `<span class="ani-card__score">${e.score}</span>` : ''}
+        </div>
+        <div class="ani-card__title">${e.title}</div>
+        <div class="ani-card__meta">${STAT[e.status] || ''}${e.progress ? ` · ${e.progress} ch.` : ''}</div>
+      </a>`).join('');
+    sec.hidden = false;
+  } catch { /* Anilist non configuré ou hors-ligne : section masquée */ }
+}
+
 renderStatusFilters();
 initControls();
 load();
+loadAnilistRanking();

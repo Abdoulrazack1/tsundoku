@@ -248,7 +248,7 @@ async function render() {
       </div>
 
       <div class="article-layout">
-        <div class="article-body prose">${safeHtml(post.content)}</div>
+        <div class="article-body prose" id="article-body">${safeHtml(post.content)}</div>
         <aside class="article-sidebar">
           <div id="toc-slot"></div>
           <div class="sidebar-card">
@@ -270,6 +270,17 @@ async function render() {
     // TOC + scrollspy
     const toc = buildTOC();
     if (toc) { qs('#toc-slot').innerHTML = toc; scrollSpy(); }
+
+    // Rideau anti-spoilers (cliquable)
+    if (post.has_spoilers) {
+      const body = qs('#article-body');
+      body.classList.add('spoiler-hidden');
+      const btn = document.createElement('button');
+      btn.className = 'spoiler-reveal';
+      btn.innerHTML = '⚠ Cette chronique contient des spoilers — <strong>cliquer pour révéler</strong>';
+      body.before(btn);
+      btn.addEventListener('click', () => { body.classList.remove('spoiler-hidden'); btn.remove(); });
+    }
 
     setSEO(post);
     initReadingProgress();
