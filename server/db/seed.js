@@ -35,7 +35,7 @@ async function main() {
   });
 
   await conn.query('SET FOREIGN_KEY_CHECKS=0');
-  for (const t of ['post_views', 'list_books', 'thematic_lists', 'quotes', 'series_assets', 'reading_timeline', 'post_tags', 'post_categories', 'book_tags', 'book_categories', 'tags', 'categories', 'posts', 'books', 'authors', 'newsletter_subscribers', 'users']) {
+  for (const t of ['comments', 'contact_messages', 'post_views', 'list_books', 'thematic_lists', 'quotes', 'series_assets', 'reading_timeline', 'post_tags', 'post_categories', 'book_tags', 'book_categories', 'tags', 'categories', 'posts', 'books', 'authors', 'newsletter_subscribers', 'users']) {
     await conn.query(`TRUNCATE TABLE ${t}`);
   }
   await conn.query('SET FOREIGN_KEY_CHECKS=1');

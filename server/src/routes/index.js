@@ -26,5 +26,7 @@ router.use('/newsletter', require('./newsletter.routes'));
 router.use('/media', require('./media.routes'));
 router.use('/integration', require('./integration.routes'));
 router.use('/tts', require('./tts.routes'));
+router.use('/comments', require('./comments.routes'));
+router.use('/contact', require('./contact.routes'));
 
 module.exports = router;

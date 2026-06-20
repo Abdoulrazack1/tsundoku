@@ -83,6 +83,7 @@ function footerHTML() {
       <div class="footer__col">
         <h4>Le projet</h4>
         <a href="/about.html">À propos</a>
+        <a href="/contact.html">Contact</a>
         <a href="/lists.html">Listes thématiques</a>
         <a href="/newsletter.html">Newsletter</a>
         <a href="/rss.xml">Flux RSS</a>

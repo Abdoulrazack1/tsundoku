@@ -55,6 +55,32 @@ async function loadRecent() {
 
 async function loadNowReading() {
   const wrap = qs('#now-reading');
+  // 1) Synchro Anilist (statut « en cours ») — ce que je lis réellement
+  try {
+    const data = await api.get('/integration/anilist/user');
+    if (data.configured) {
+      const current = (data.entries || []).filter((e) => e.status === 'en_cours');
+      if (current.length) {
+        const e = current.sort((a, b) => (b.progress || 0) - (a.progress || 0))[0];
+        const pct = e.chapters ? Math.min(100, Math.round(((e.progress || 0) / e.chapters) * 100)) : 0;
+        wrap.className = 'now-reading reveal';
+        wrap.innerHTML = `
+          <img class="now-reading__cover" src="${coverFallback(e.cover_image_url, e.title)}" alt="">
+          <div>
+            <p class="now-reading__label">En ce moment je lis · <span style="opacity:.7">Anilist</span></p>
+            <h3 class="now-reading__title">${escapeHtml(e.title)}</h3>
+            <p class="now-reading__author">${e.progress ? `Chapitre ${e.progress}${e.chapters ? ' / ' + e.chapters : ''}` : ''}</p>
+            ${pct ? `<div class="progress"><div class="progress__fill" style="width:0"></div></div><p class="now-reading__pct">${pct}%</p>` : ''}
+            <a class="btn btn--sm" style="margin-top:14px;border-color:rgba(245,240,232,.4);color:#fff" target="_blank" rel="noopener" href="https://anilist.co/manga/${e.anilist_id}">Voir sur Anilist ↗</a>
+          </div>`;
+        requestAnimationFrame(() => { const f = qs('.progress__fill', wrap); if (f) f.style.width = `${pct}%`; });
+        initScrollReveal(wrap.parentElement);
+        return;
+      }
+    }
+  } catch { /* fallback ci-dessous */ }
+
+  // 2) Repli : timeline locale
   try {
     const { entries } = await api.get('/timeline?status=en_cours');
     const e = entries[0];

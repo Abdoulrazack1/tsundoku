@@ -77,6 +77,16 @@
 .article-body { transition: filter var(--t-slow), opacity var(--t-slow); }
 .article-body img { cursor: zoom-in; }
 
+/* Commentaires */
+.comments-section { border-top: 1px solid var(--line); }
+.comment { padding: var(--space-md) 0; border-bottom: 1px solid var(--line); }
+.comment__head { display: flex; gap: var(--space-sm); align-items: baseline; margin-bottom: 6px; }
+.comment__head span { font-size: var(--fs-small); }
+.comment p { font-family: var(--font-serif); line-height: 1.6; }
+.comment--reply { margin: var(--space-sm) 0 0 var(--space-md); padding: var(--space-sm) 0 0; border-top: 1px dashed var(--line); border-bottom: none; }
+.comment-form { display: flex; flex-direction: column; gap: var(--space-sm); margin-top: var(--space-lg); padding: var(--space-md); border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); }
+.comment-form .btn { align-self: flex-start; }
+
 /* Livre 3D (Three.js) */
 .book-3d { width: 100%; height: 360px; }
 

@@ -6,6 +6,8 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS contact_messages;
 DROP TABLE IF EXISTS post_views;
 DROP TABLE IF EXISTS list_books;
 DROP TABLE IF EXISTS thematic_lists;
@@ -262,6 +264,36 @@ CREATE TABLE post_views (
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
     INDEX idx_views_post (post_id),
     INDEX idx_views_date (viewed_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------
+-- Commentaires (modérés) — §26
+-- ---------------------------------------------------------------------
+CREATE TABLE comments (
+    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    post_id     INT UNSIGNED NOT NULL,
+    parent_id   INT UNSIGNED NULL,
+    author_name VARCHAR(80) NOT NULL,
+    content     TEXT NOT NULL,
+    approved    BOOLEAN DEFAULT FALSE,
+    ip_hash     VARCHAR(64),
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE,
+    INDEX idx_comments_post (post_id, approved)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------
+-- Messages de contact
+-- ---------------------------------------------------------------------
+CREATE TABLE contact_messages (
+    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name       VARCHAR(120) NOT NULL,
+    email      VARCHAR(255) NOT NULL,
+    subject    VARCHAR(200),
+    message    TEXT NOT NULL,
+    is_read    BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------

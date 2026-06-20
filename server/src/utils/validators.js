@@ -151,6 +151,21 @@ const schemas = {
 
   // --- Newsletter ---
   newsletter: Joi.object({ email: Joi.string().email().required() }),
+
+  // --- Commentaires ---
+  commentCreate: Joi.object({
+    author_name: Joi.string().min(2).max(80).required(),
+    content: Joi.string().min(2).max(2000).required(),
+    parent_id: id.allow(null),
+  }),
+
+  // --- Contact ---
+  contactCreate: Joi.object({
+    name: Joi.string().min(2).max(120).required(),
+    email: Joi.string().email().required(),
+    subject: Joi.string().max(200).allow('', null),
+    message: Joi.string().min(5).max(4000).required(),
+  }),
 };
 
 module.exports = schemas;

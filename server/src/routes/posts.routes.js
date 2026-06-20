@@ -2,6 +2,7 @@
 
 const router = require('express').Router();
 const ctrl = require('../controllers/posts.controller');
+const comments = require('../controllers/comments.controller');
 const { validate } = require('../middlewares/validate.middleware');
 const { requireAuth } = require('../middlewares/auth.middleware');
 const schemas = require('../utils/validators');
@@ -14,6 +15,10 @@ router.get('/search', ctrl.search);
 router.get('/id/:id', requireAuth, ctrl.getById); // admin : par ID, contenu complet
 router.get('/:slug', ctrl.getBySlug);
 router.post('/:slug/view', ctrl.incrementView);
+
+// Commentaires (public : lecture + dépôt modéré)
+router.get('/:slug/comments', comments.listForPost);
+router.post('/:slug/comments', validate(schemas.commentCreate), comments.create);
 
 // Écriture admin
 router.post('/', requireAuth, validate(schemas.postCreate), ctrl.create);

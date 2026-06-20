@@ -18,6 +18,62 @@ function pushRecent(post) {
   } catch { /* ignore */ }
 }
 
+/* ---- Commentaires (modérés) §26 ---- */
+function commentNode(c) {
+  const date = formatDate(c.created_at, { day: 'numeric', month: 'long', year: 'numeric' });
+  const replies = (c.replies || []).map((r) => `<div class="comment comment--reply">
+    <div class="comment__head"><strong>${escapeHtml(r.author_name)}</strong><span class="text-muted">${formatDate(r.created_at, { day: 'numeric', month: 'short' })}</span></div>
+    <p>${escapeHtml(r.content)}</p></div>`).join('');
+  return `<div class="comment">
+    <div class="comment__head"><strong>${escapeHtml(c.author_name)}</strong><span class="text-muted">${date}</span></div>
+    <p>${escapeHtml(c.content)}</p>
+    ${replies}
+  </div>`;
+}
+
+async function loadComments(post) {
+  const sec = document.createElement('section');
+  sec.className = 'section container comments-section';
+  sec.innerHTML = `
+    <div class="measure">
+      <div class="section-head"><p class="kicker">Discussion</p><h2 class="section-head__title font-display" style="font-size:2rem" id="comments-title">Commentaires</h2></div>
+      <div id="comments-list"></div>
+      <form class="comment-form" id="comment-form" novalidate>
+        <h3 class="font-display" style="font-size:1.3rem">Laisser un commentaire</h3>
+        <input class="input" name="author_name" placeholder="Ton nom" required maxlength="80">
+        <textarea class="textarea" name="content" rows="4" placeholder="Ton avis (publié après modération)…" required maxlength="2000"></textarea>
+        <button class="btn btn--solid" type="submit">Envoyer</button>
+        <p class="newsletter__msg" role="status"></p>
+      </form>
+    </div>`;
+  qs('#article').after(sec);
+
+  async function refresh() {
+    try {
+      const { comments } = await api.get(`/posts/${post.slug}/comments`);
+      const list = qs('#comments-list', sec);
+      qs('#comments-title', sec).textContent = comments.length ? `${comments.length} commentaire${comments.length > 1 ? 's' : ''}` : 'Commentaires';
+      list.innerHTML = comments.length ? comments.map(commentNode).join('') : '<p class="text-muted">Aucun commentaire pour l\'instant. Lance la discussion !</p>';
+    } catch { /* ignore */ }
+  }
+  await refresh();
+
+  qs('#comment-form', sec).addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const msg = form.querySelector('.newsletter__msg');
+    const data = Object.fromEntries(new FormData(form));
+    if (!data.author_name?.trim() || !data.content?.trim()) { msg.textContent = 'Nom et commentaire requis.'; return; }
+    const btn = form.querySelector('button'); btn.disabled = true;
+    try {
+      const r = await api.post(`/posts/${post.slug}/comments`, { author_name: data.author_name, content: data.content });
+      msg.style.color = 'var(--color-accent)'; msg.textContent = r.message;
+      form.reset();
+    } catch (err) { msg.style.color = '#e74c3c'; msg.textContent = err.message; }
+    finally { btn.disabled = false; }
+  });
+}
+
 async function loadRelated(post) {
   const cat = post.categories?.[0];
   if (!cat) return;
@@ -364,6 +420,7 @@ async function render() {
     // Compteur de vues + historique + articles liés
     api.post(`/posts/${slug}/view`).catch(() => {});
     pushRecent(post);
+    loadComments(post);
     loadRelated(post);
   } catch (err) {
     root.innerHTML = `<div class="empty"><h3>Article introuvable</h3><p>${escapeHtml(err.message || '')}</p><a class="btn" href="/articles.html">Voir les chroniques</a></div>`;
