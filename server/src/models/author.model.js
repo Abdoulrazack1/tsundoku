@@ -19,6 +19,20 @@ async function getById(id) {
   return queryOne('SELECT * FROM authors WHERE id = :id', { id });
 }
 
+const slugify = require('../utils/slugify');
+
+/** Retourne l'id d'un auteur (le crée s'il n'existe pas). */
+async function ensureByName(name) {
+  if (!name) return null;
+  const existing = await queryOne('SELECT id FROM authors WHERE name = :name', { name });
+  if (existing) return existing.id;
+  let slug = slugify(name) || `auteur-${Date.now()}`;
+  // unicité du slug
+  if (await queryOne('SELECT id FROM authors WHERE slug = :slug', { slug })) slug = `${slug}-${Date.now().toString(36)}`;
+  const [res] = await pool.query('INSERT INTO authors (name, slug) VALUES (?, ?)', [name, slug]);
+  return res.insertId;
+}
+
 async function create(data) {
   const [res] = await pool.query(
     `INSERT INTO authors (name, slug, bio, image_url, nationality, birth_date, death_date)
@@ -54,4 +68,4 @@ async function stats(authorId) {
   );
 }
 
-module.exports = { list, getBySlug, getById, create, update, remove, stats };
+module.exports = { list, getBySlug, getById, create, update, remove, stats, ensureByName };

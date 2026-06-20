@@ -47,3 +47,11 @@
 .editor-actions { display: flex; flex-direction: column; gap: 8px; }
 .checks label { display: flex; align-items: center; gap: 8px; font-size: var(--fs-ui); padding: 4px 0; }
 @media (max-width: 900px) { .editor-grid { grid-template-columns: 1fr; } .admin { grid-template-columns: 1fr; } .admin-sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; } .admin-nav { flex-direction: row; flex-wrap: wrap; } }
+
+/* Modale de prévisualisation de l'article */
+.preview-modal { position: fixed; inset: 0; z-index: var(--z-overlay); background: rgba(13,10,8,0.6); display: grid; place-items: start center; padding: 5vh 4vw; overflow-y: auto; opacity: 0; visibility: hidden; transition: opacity var(--t-base); }
+.preview-modal.is-open { opacity: 1; visibility: visible; }
+.preview-modal__inner { background: var(--bg); border-radius: var(--radius-md); padding: clamp(28px, 5vw, 64px); max-width: 820px; width: 100%; position: relative; box-shadow: var(--shadow-lg); }
+.preview-modal__close { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border-radius: 50%; background: var(--line); color: var(--ink); }
+.preview-modal__close:hover { background: var(--color-accent); color: #fff; }
+.preview-modal .manga-figure img { max-width: 100%; border-radius: 4px; }

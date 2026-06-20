@@ -31,13 +31,18 @@
     <main class="admin-main">
       <header class="admin-header">
         <h1 class="font-display" id="editor-heading">Nouvel article</h1>
-        <a class="btn btn--sm" href="/admin/dashboard.html">← Retour</a>
+        <div class="cluster">
+          <span class="text-muted" id="word-count" style="font-size:.78rem">0 mot · 0 min</span>
+          <button class="btn btn--sm" id="preview-btn">Prévisualiser</button>
+          <a class="btn btn--sm" href="/admin/dashboard.html">← Retour</a>
+        </div>
       </header>
 
       <div class="editor-grid">
         <div>
           <input class="editor-title" id="post-title" placeholder="Titre de la chronique…">
           <div id="editorjs"></div>
+          <p class="text-muted" id="autosave-status" style="font-size:.72rem;margin-top:10px"></p>
         </div>
 
         <aside class="editor-aside">
@@ -61,8 +66,13 @@
 
           <div class="editor-panel">
             <h4>Série liée</h4>
-            <select class="select" id="book-select"><option value="">— Aucune —</option></select>
-            <p class="text-muted" style="font-size:.72rem;margin-top:6px">La cover de l'article reprend celle de la série si vide.</p>
+            <div style="display:flex;gap:6px">
+              <input class="input" id="series-q" placeholder="Chercher (Anilist)…" style="flex:1">
+              <button class="btn btn--sm" id="series-search">OK</button>
+            </div>
+            <div id="series-results" style="margin-top:8px;display:grid;gap:6px;max-height:220px;overflow:auto"></div>
+            <select class="select" id="book-select" style="margin-top:8px"><option value="">— ou série existante —</option></select>
+            <p class="text-muted" style="font-size:.72rem;margin-top:6px">L'import crée la série (cover, tomes, genres) et la lie à l'article.</p>
           </div>
 
           <div class="editor-panel">

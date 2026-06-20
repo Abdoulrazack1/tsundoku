@@ -11,7 +11,8 @@ function siteUrl(req) {
 /** Flux RSS 2.0 des derniers articles (§23.2). */
 const rss = asyncHandler(async (req, res) => {
   const base = siteUrl(req);
-  const { posts } = await postModel.list({ limit: 30, status: 'published' });
+  const category = (req.query.category || '').trim();
+  const { posts } = await postModel.list({ limit: 30, status: 'published', category: category || undefined });
   const items = posts
     .map((p) => `
     <item>

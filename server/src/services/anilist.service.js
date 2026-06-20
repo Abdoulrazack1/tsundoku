@@ -121,11 +121,13 @@ async function getMediaById(id) {
   return {
     anilist_id: m.id,
     title: m.title.english || m.title.romaji || m.title.native,
+    original_title: m.title.native || m.title.romaji || null,
     synopsis: (m.description || '').replace(/<[^>]+>/g, '').trim(),
     cover_image_url: m.coverImage?.large || null,
     chapters: m.chapters || null, volumes: m.volumes || null,
     publication_year: m.startDate?.year || null,
     author: m.staff?.edges?.[0]?.node?.name?.full || null,
+    genres: m.genres || [],
   };
 }
 

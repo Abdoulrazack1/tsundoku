@@ -7,6 +7,7 @@ const { requireAuth } = require('../middlewares/auth.middleware');
 const schemas = require('../utils/validators');
 
 router.get('/', ctrl.list);
+router.post('/import', requireAuth, ctrl.importSeries);
 router.get('/:id/assets', ctrl.listAssets);
 router.post('/:id/assets', requireAuth, validate(schemas.assetCreate), ctrl.addAsset);
 router.delete('/assets/:assetId', requireAuth, ctrl.removeAsset);

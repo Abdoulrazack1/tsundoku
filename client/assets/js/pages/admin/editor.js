@@ -1,8 +1,10 @@
 // Éditeur d'articles (§6.3) : Editor.js, upload/Anilist de couverture, liaison livre.
 import { api } from '../../core/api.js';
-import { qs, qsa, escapeHtml, getParam, coverFallback } from '../../core/utils.js';
+import { qs, qsa, escapeHtml, getParam, coverFallback, debounce, safeHtml } from '../../core/utils.js';
 import { toast } from '../../core/toast.js';
 import { requireAdmin, renderSidebar } from './admin-shell.js';
+
+const DRAFT_KEY = `tsundoku_draft_${getParam('id') || 'new'}`;
 
 const postId = getParam('id');
 let editor = null;
@@ -76,7 +78,45 @@ function initEditor(blocks) {
       } : undefined,
     },
     data: { blocks: blocks || [{ type: 'paragraph', data: { text: '' } }] },
+    onChange: () => { updateWordCount(); scheduleAutosave(); },
   });
+}
+
+/* ---- Compteur de mots & temps de lecture (live) ---- */
+async function updateWordCount() {
+  if (!editor) return;
+  try {
+    const out = await editor.save();
+    const text = blocksToHtml(out).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const words = text ? text.split(' ').filter(Boolean).length : 0;
+    qs('#word-count').textContent = `${words} mot${words > 1 ? 's' : ''} · ${Math.max(1, Math.ceil(words / 200))} min`;
+  } catch { /* ignore */ }
+}
+
+/* ---- Autosave brouillon (localStorage) ---- */
+const scheduleAutosave = debounce(async () => {
+  try {
+    const out = await editor.save();
+    const snap = { title: qs('#post-title').value, blocks: out.blocks, ts: Date.now() };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(snap));
+    qs('#autosave-status').textContent = `Brouillon auto-enregistré à ${new Date().toLocaleTimeString('fr-FR')}`;
+  } catch { /* ignore */ }
+}, 1500);
+
+/* ---- Prévisualisation ---- */
+async function preview() {
+  const out = await editor.save();
+  const html = safeHtml(blocksToHtml(out));
+  let modal = qs('#preview-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'preview-modal'; modal.className = 'preview-modal';
+    modal.innerHTML = '<div class="preview-modal__inner"><button class="preview-modal__close" aria-label="Fermer">✕</button><article class="prose measure" id="preview-body"></article></div>';
+    document.body.append(modal);
+    modal.addEventListener('click', (e) => { if (e.target === modal || e.target.closest('.preview-modal__close')) modal.classList.remove('is-open'); });
+  }
+  qs('#preview-body').innerHTML = `<h1 class="font-display" style="font-size:2.4rem;margin-bottom:1rem">${escapeHtml(qs('#post-title').value || 'Sans titre')}</h1>${html}`;
+  modal.classList.add('is-open');
 }
 
 function setCover(url) {
@@ -125,7 +165,20 @@ function initCoverControls() {
 }
 
 async function loadExisting() {
-  if (!postId) { initEditor(); return; }
+  if (!postId) {
+    const draft = localStorage.getItem(DRAFT_KEY);
+    if (draft) {
+      try {
+        const d = JSON.parse(draft);
+        if (d.title) qs('#post-title').value = d.title;
+        initEditor(d.blocks);
+        qs('#autosave-status').textContent = 'Brouillon local restauré.';
+        return;
+      } catch { /* ignore */ }
+    }
+    initEditor();
+    return;
+  }
   try {
     const { post } = await api.auth.get(`/posts/id/${postId}`);
     qs('#editor-heading').textContent = 'Modifier l\'article';
@@ -148,6 +201,39 @@ async function loadExisting() {
     qs('#delete-btn').style.display = 'block';
     initEditor(htmlToBlocks(post.content));
   } catch (e) { toast('Chargement impossible : ' + e.message, { type: 'error' }); initEditor(); }
+}
+
+/* ---- Liaison de série : recherche Anilist → import en 1 clic ---- */
+function initSeriesPicker() {
+  const box = qs('#series-results');
+  async function doSearch() {
+    const q = qs('#series-q').value.trim(); if (!q) return;
+    box.innerHTML = '<div class="spinner"></div>';
+    try {
+      const { results } = await api.auth.get(`/integration/anilist/search?q=${encodeURIComponent(q)}`);
+      box.innerHTML = results.map((r, i) => `<button class="series-hit" data-i="${i}" style="display:flex;gap:8px;align-items:center;text-align:left;padding:6px;border:1px solid var(--line);border-radius:6px">
+        <img src="${escapeHtml(r.cover_image_url || '')}" style="width:32px;height:46px;object-fit:cover;border-radius:3px;flex:none" alt="" loading="lazy">
+        <span style="font-size:.76rem">${escapeHtml(r.title)}${r.publication_year ? ` (${r.publication_year})` : ''}<br><span class="text-muted">${escapeHtml(r.author || '')}</span></span>
+      </button>`).join('');
+      box.querySelectorAll('.series-hit').forEach((b) => b.addEventListener('click', () => importSerie(results[b.dataset.i])));
+    } catch (e) { box.innerHTML = `<p class="text-muted" style="font-size:.74rem">${e.message}</p>`; }
+  }
+  async function importSerie(r) {
+    box.innerHTML = '<div class="spinner"></div>';
+    try {
+      const { book, created } = await api.auth.post('/books/import', { source: 'anilist', anilist_id: r.anilist_id });
+      // ajoute/sélectionne la série dans le select
+      const sel = qs('#book-select');
+      let opt = [...sel.options].find((o) => o.value == book.id);
+      if (!opt) { opt = new Option(`${book.title}${book.author ? ' — ' + book.author.name : ''}`, book.id); sel.add(opt); }
+      sel.value = book.id;
+      if (!coverUrl && book.cover_image_url) setCover(book.cover_image_url);
+      box.innerHTML = `<p class="text-accent" style="font-size:.76rem">✓ ${escapeHtml(book.title)} ${created ? 'importée' : 'déjà en base'} et liée.</p>`;
+      toast(created ? 'Série importée et liée' : 'Série liée', { type: 'success' });
+    } catch (e) { box.innerHTML = `<p class="text-muted" style="font-size:.74rem">${e.message}</p>`; }
+  }
+  qs('#series-search').addEventListener('click', (e) => { e.preventDefault(); doSearch(); });
+  qs('#series-q').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
 }
 
 /* ---- Picker de planches Inko : œuvre → chapitre → planche → insertion ---- */
@@ -239,9 +325,10 @@ async function save() {
 
   const btn = qs('#save-btn'); btn.disabled = true;
   try {
-    if (postId) { await api.auth.put(`/posts/${postId}`, payload); toast('Article mis à jour', { type: 'success' }); }
+    if (postId) { await api.auth.put(`/posts/${postId}`, payload); localStorage.removeItem(DRAFT_KEY); toast('Article mis à jour', { type: 'success' }); }
     else {
       const { post } = await api.auth.post('/posts', payload);
+      localStorage.removeItem(DRAFT_KEY);
       toast('Article créé', { type: 'success' });
       location.href = `/admin/post-editor.html?id=${post.id}`;
     }
@@ -256,7 +343,10 @@ async function main() {
   initCoverControls();
   await loadTaxonomies();
   await loadExisting();
+  initSeriesPicker();
   initInkoPicker();
+  qs('#preview-btn').addEventListener('click', preview);
+  setTimeout(updateWordCount, 400);
 
   qs('#save-btn').addEventListener('click', save);
   qs('#delete-btn').addEventListener('click', async () => {

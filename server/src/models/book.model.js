@@ -102,6 +102,20 @@ async function attachAssets(book) {
   return book;
 }
 
+async function findByExternal({ anilist_id, inko_id }) {
+  if (anilist_id) { const r = await queryOne('SELECT id FROM books WHERE anilist_id = :id', { id: anilist_id }); if (r) return getById(r.id); }
+  if (inko_id) { const r = await queryOne('SELECT id FROM books WHERE inko_id = :id', { id: inko_id }); if (r) return getById(r.id); }
+  return null;
+}
+
+async function uniqueSlug(base) {
+  const slugify = require('../utils/slugify');
+  let slug = slugify(base) || `serie-${Date.now()}`;
+  let candidate = slug; let i = 2;
+  while (await queryOne('SELECT id FROM books WHERE slug = :slug', { slug: candidate })) candidate = `${slug}-${i++}`;
+  return candidate;
+}
+
 async function getBySlug(slug) {
   const row = await queryOne(`SELECT ${COLUMNS} FROM books b LEFT JOIN authors a ON b.author_id=a.id WHERE b.slug = :slug`, { slug });
   if (!row) return null;
@@ -214,4 +228,4 @@ async function remove(id) {
   return res.affectedRows > 0;
 }
 
-module.exports = { list, getBySlug, getById, listByAuthor, getSimilar, create, update, remove, shape, listAssets, addAsset, removeAsset };
+module.exports = { list, getBySlug, getById, findByExternal, uniqueSlug, listByAuthor, getSimilar, create, update, remove, shape, listAssets, addAsset, removeAsset };

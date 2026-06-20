@@ -5,6 +5,32 @@ import { initReadingProgress } from '../components/reading-progress.js';
 import { initBook3D } from '../animations/book-3d.js';
 import { splitReveal } from '../animations/gsap-init.js';
 import { toast } from '../core/toast.js';
+import { articleCard } from '../components/cards.js';
+
+/* Historique de lecture (localStorage) — alimente « vus récemment ». */
+function pushRecent(post) {
+  try {
+    const key = 'tsundoku_recent';
+    const list = JSON.parse(localStorage.getItem(key) || '[]').filter((r) => r.slug !== post.slug);
+    list.unshift({ slug: post.slug, title: post.title, cover: post.cover_image_url, at: Date.now() });
+    localStorage.setItem(key, JSON.stringify(list.slice(0, 12)));
+  } catch { /* ignore */ }
+}
+
+async function loadRelated(post) {
+  const cat = post.categories?.[0];
+  if (!cat) return;
+  try {
+    const { posts } = await api.get(`/posts?category=${cat.slug}&limit=4`);
+    const related = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+    if (!related.length) return;
+    const sec = document.createElement('section');
+    sec.className = 'section container';
+    sec.innerHTML = `<div class="section-head"><p class="kicker">À lire ensuite</p><h2 class="section-head__title font-display" style="font-size:2rem">Dans le même genre</h2></div>
+      <div class="grid-cards">${related.map((p) => articleCard(p, 'md')).join('')}</div>`;
+    qs('#article').after(sec);
+  } catch { /* ignore */ }
+}
 
 const root = qs('#article');
 const TYPE_LABEL = { dossier: 'Dossier', analyse: 'Analyse', journal: 'Journal', liste: 'Liste' };
@@ -303,8 +329,10 @@ async function render() {
 
     // Titre animé
     splitReveal(qs('#art-title'), { delay: 0.2 });
-    // Compteur de vues
+    // Compteur de vues + historique + articles liés
     api.post(`/posts/${slug}/view`).catch(() => {});
+    pushRecent(post);
+    loadRelated(post);
   } catch (err) {
     root.innerHTML = `<div class="empty"><h3>Article introuvable</h3><p>${escapeHtml(err.message || '')}</p><a class="btn" href="/articles.html">Voir les chroniques</a></div>`;
   }
