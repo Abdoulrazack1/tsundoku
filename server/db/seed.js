@@ -54,7 +54,7 @@ const SERIES = [
     "Denji fusionne avec son démon-tronçonneuse Pochita pour survivre. Un shōnen punk, cru et étonnamment tendre sur le désir d'une vie simple.", 'Chainsaw Man'],
   ['Monster', 'MONSTER', 4, 1994, 'Kana', 18, 162, 'manga', 'seinen', 'lu', 'termine', 5.0,
     ['seinen', 'psychologique', 'drame'], ['thriller', 'tenma', 'johan'],
-    "Le Dr Tenma sauve un enfant qui deviendra un tueur. Un thriller vertigineux sur le bien, le mal et la responsabilité.", 'Monster'],
+    "Le Dr Tenma sauve un enfant qui deviendra un tueur. Un thriller vertigineux sur le bien, le mal et la responsabilité.", 'Monster', 30001],
   ['Oyasumi Punpun', 'おやすみプンプン', 5, 2007, 'Kana', 13, 147, 'manga', 'seinen', 'lu', 'termine', 4.5,
     ['seinen', 'tranche-de-vie', 'psychologique', 'drame'], ['dépression', 'jeunesse', 'asano'],
     "La vie de Punpun, de l'enfance à l'âge adulte, dans une banlieue japonaise grise. Une plongée intime et dévastatrice dans le mal-être.", 'Goodnight Punpun'],
@@ -149,11 +149,11 @@ async function main() {
   // Séries (+ enrichissement Anilist : cover, synopsis, anilist_id)
   const seriesIds = [];
   for (const s of SERIES) {
-    const [title, original, ai, year, publisher, volumes, chapters, kind, demo, readStatus, pubStatus, rating, cats, tags, synopsis, aniQuery] = s;
+    const [title, original, ai, year, publisher, volumes, chapters, kind, demo, readStatus, pubStatus, rating, cats, tags, synopsis, aniQuery, explicitId] = s;
     let coverUrl = null; let anilistId = null; let syn = synopsis;
     try {
-      const res = await anilist.searchManga(aniQuery, { perPage: 1 });
-      if (res[0]) { coverUrl = res[0].cover_image_url || null; anilistId = res[0].anilist_id || null; if (res[0].synopsis) syn = res[0].synopsis.slice(0, 600); }
+      const res = explicitId ? await anilist.getMediaById(explicitId) : (await anilist.searchManga(aniQuery, { perPage: 1 }))[0];
+      if (res) { coverUrl = res.cover_image_url || null; anilistId = res.anilist_id || null; if (res.synopsis) syn = res.synopsis.slice(0, 600); }
     } catch { /* repli SVG via generate-covers */ }
 
     const [r] = await conn.query(

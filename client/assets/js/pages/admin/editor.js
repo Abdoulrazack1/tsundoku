@@ -195,7 +195,9 @@ function initInkoPicker() {
       box.querySelector('.inko-back2').addEventListener('click', () => openChapters(serie));
       box.querySelectorAll('.inko-page').forEach((b) => b.addEventListener('click', async () => {
         try {
-          await editor.blocks.insert('image', { file: { url: b.dataset.url }, caption: b.dataset.cap });
+          // On passe par le proxy same-origin (planches souvent hotlink-protégées)
+          const url = `/api/media/proxy?u=${encodeURIComponent(b.dataset.url)}`;
+          await editor.blocks.insert('image', { file: { url }, caption: b.dataset.cap });
           toast('Planche insérée dans l\'article', { type: 'success' });
         } catch { toast('Insertion impossible', { type: 'error' }); }
       }));

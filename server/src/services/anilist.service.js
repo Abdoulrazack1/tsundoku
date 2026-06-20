@@ -106,4 +106,27 @@ async function getUserList(username) {
   return { user, entries };
 }
 
-module.exports = { searchManga, getUserList };
+/** Récupère un manga Anilist par ID exact (pour des covers fiables). */
+async function getMediaById(id) {
+  const gql = `query ($id: Int) { Media(id: $id, type: MANGA) {
+    id title { romaji english native } description(asHtml:false) coverImage { large }
+    chapters volumes startDate { year } genres staff(perPage:1){ edges{ node{ name{ full } } } } } }`;
+  const resp = await fetch(ANILIST_ENDPOINT, {
+    method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ query: gql, variables: { id } }),
+  });
+  if (!resp.ok) throw new Error(`Anilist ${resp.status}`);
+  const m = (await resp.json())?.data?.Media;
+  if (!m) return null;
+  return {
+    anilist_id: m.id,
+    title: m.title.english || m.title.romaji || m.title.native,
+    synopsis: (m.description || '').replace(/<[^>]+>/g, '').trim(),
+    cover_image_url: m.coverImage?.large || null,
+    chapters: m.chapters || null, volumes: m.volumes || null,
+    publication_year: m.startDate?.year || null,
+    author: m.staff?.edges?.[0]?.node?.name?.full || null,
+  };
+}
+
+module.exports = { searchManga, getUserList, getMediaById };

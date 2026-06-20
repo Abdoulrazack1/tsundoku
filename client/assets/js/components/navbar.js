@@ -42,10 +42,16 @@ export function initNavbar() {
 
   // --- Lien courant (desktop + mobile) ---
   const path = location.pathname.replace(/index\.html$/, '').replace(/\/$/, '') || '/';
+  const isDossier = new URLSearchParams(location.search).get('type') === 'dossier';
   qsa('.navbar__nav a, .mobile-menu__nav a').forEach((a) => {
     const href = a.getAttribute('href');
-    const base = href.replace('.html', '');
-    if (href === path || (href !== '/' && (path === base || path.startsWith(base)))) {
+    const [hpath, hquery] = href.split('?');
+    const base = hpath.replace('.html', '');
+    const hrefDossier = hquery && hquery.includes('type=dossier');
+    // Cas particulier : Chroniques et Dossiers partagent /articles.html
+    if (hpath === '/articles.html') {
+      if (hrefDossier === isDossier && path === '/articles.html') a.setAttribute('aria-current', 'page');
+    } else if (href === path || (href !== '/' && (path === base || path.startsWith(base)))) {
       a.setAttribute('aria-current', 'page');
     }
   });

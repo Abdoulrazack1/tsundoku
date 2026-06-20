@@ -3,9 +3,9 @@ import { qs } from '../core/utils.js';
 
 const NAV_LINKS = [
   ['Chroniques', '/articles.html'],
-  ['Séries', '/library.html'],
+  ['Dossiers', '/articles.html?type=dossier'],
+  ['Bibliothèque', '/library.html'],
   ['Journal', '/journal.html'],
-  ['Listes', '/lists.html'],
   ['À propos', '/about.html'],
 ];
 
@@ -70,7 +70,8 @@ function footerHTML() {
       <div class="footer__col">
         <h4>Explorer</h4>
         <a href="/articles.html">Chroniques</a>
-        <a href="/library.html">Séries</a>
+        <a href="/articles.html?type=dossier">Dossiers</a>
+        <a href="/library.html">Bibliothèque</a>
         <a href="/journal.html">Journal de lecture</a>
         <a href="/stats.html">En chiffres</a>
       </div>

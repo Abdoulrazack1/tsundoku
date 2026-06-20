@@ -19,4 +19,26 @@ const remove = asyncHandler(async (req, res) => {
   res.json({ message: 'Fichier supprimé.' });
 });
 
-module.exports = { upload, remove };
+/**
+ * Proxy d'image : rapatrie une image externe (Anilist, MangaDex…) en same-origin
+ * pour permettre son usage comme texture WebGL (sinon bloquée par CORS) et éviter
+ * le canvas "tainted". Réservé aux images.
+ */
+const proxy = asyncHandler(async (req, res) => {
+  const u = req.query.u;
+  if (!u || !/^https?:\/\//i.test(u)) throw new AppError('URL invalide.', 400);
+  let upstream;
+  try {
+    upstream = await fetch(u, { headers: { 'User-Agent': 'Tsundoku/1.0' } });
+  } catch {
+    throw new AppError('Image inaccessible.', 502);
+  }
+  const type = upstream.headers.get('content-type') || '';
+  if (!upstream.ok || !type.startsWith('image/')) throw new AppError('Ressource non valide.', 502);
+  res.set('Content-Type', type);
+  res.set('Cache-Control', 'public, max-age=604800');
+  res.set('Access-Control-Allow-Origin', '*');
+  res.send(Buffer.from(await upstream.arrayBuffer()));
+});
+
+module.exports = { upload, remove, proxy };

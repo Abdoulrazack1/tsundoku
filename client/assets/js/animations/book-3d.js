@@ -1,13 +1,19 @@
 // Livre 3D interactif & étagère 3D via Three.js (§8.3 A & §5.4)
 import { prefersReducedMotion } from '../core/utils.js';
 
+// Les covers externes (Anilist, MangaDex) sont servies via notre proxy same-origin
+// pour pouvoir texturer le WebGL sans blocage CORS / canvas "tainted".
+function proxied(url) {
+  return url && /^https?:\/\//i.test(url) ? `/api/media/proxy?u=${encodeURIComponent(url)}` : url;
+}
+
 function makeBookMesh(THREE, coverUrl) {
   const group = new THREE.Group();
   const geo = new THREE.BoxGeometry(2.6, 3.8, 0.5);
 
   const loader = new THREE.TextureLoader();
   loader.setCrossOrigin('anonymous');
-  const cover = coverUrl ? loader.load(coverUrl) : null;
+  const cover = coverUrl ? loader.load(proxied(coverUrl)) : null;
   if (cover) cover.colorSpace = THREE.SRGBColorSpace;
 
   const paper = new THREE.MeshStandardMaterial({ color: 0xefe9dd, roughness: 0.9 });
@@ -100,7 +106,7 @@ export function initShelf3D(container, books = []) {
     const b = books[i];
     const height = 3.4 + (i % 4) * 0.25;
     const geo = new THREE.BoxGeometry(0.9, height, 2.6);
-    const tex = b.cover_image_url ? loader.load(b.cover_image_url) : null;
+    const tex = b.cover_image_url ? loader.load(proxied(b.cover_image_url)) : null;
     if (tex) tex.colorSpace = THREE.SRGBColorSpace;
     const spineMat = new THREE.MeshStandardMaterial({ color: colors[i % colors.length], roughness: 0.8 });
     const coverMat = new THREE.MeshStandardMaterial({ map: tex, color: tex ? 0xffffff : 0xcccccc, roughness: 0.6 });
