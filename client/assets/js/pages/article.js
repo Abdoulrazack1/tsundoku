@@ -6,6 +6,7 @@ import { initBook3D } from '../animations/book-3d.js';
 import { splitReveal } from '../animations/gsap-init.js';
 import { toast } from '../core/toast.js';
 import { articleCard } from '../components/cards.js';
+import { Favs } from '../components/features.js';
 
 /* Historique de lecture (localStorage) — alimente « vus récemment ». */
 function pushRecent(post) {
@@ -85,8 +86,25 @@ function adjacentCard(p, dir) {
 function setSEO(post) {
   document.title = `${post.title} — Tsundoku`;
   const desc = post.meta_description || post.excerpt || '';
+  const img = post.cover_image_url ? (location.origin + post.cover_image_url) : '';
   const set = (sel, attr, val) => { const m = qs(sel); if (m) m.setAttribute(attr, val); };
   set('meta[name="description"]', 'content', desc);
+  // Open Graph / Twitter Cards dynamiques (§17.4)
+  const meta = (prop, val, useName) => {
+    if (!val) return;
+    const sel = useName ? `meta[name="${prop}"]` : `meta[property="${prop}"]`;
+    let m = qs(sel);
+    if (!m) { m = document.createElement('meta'); m.setAttribute(useName ? 'name' : 'property', prop); document.head.append(m); }
+    m.setAttribute('content', val);
+  };
+  meta('og:title', `${post.title} — Tsundoku`);
+  meta('og:description', desc);
+  meta('og:image', img);
+  meta('og:url', location.href);
+  meta('twitter:title', post.title, true);
+  meta('twitter:description', desc, true);
+  meta('twitter:image', img, true);
+  meta('twitter:creator', '@20thHeir', true);
   // JSON-LD Article (§17.2)
   const ld = {
     '@context': 'https://schema.org', '@type': 'Article',
@@ -279,10 +297,11 @@ async function render() {
         <aside class="article-sidebar">
           <div id="toc-slot"></div>
           <div class="sidebar-card">
-            <h4>Partager</h4>
+            <h4>Partager & sauvegarder</h4>
             <div class="share-btns">
               <button class="icon-btn js-share-tw" aria-label="Partager sur X"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 3h3l-7 8 8 10h-6l-5-6-5 6H3l8-9L3 3h6l4 5z"/></svg></button>
               <button class="icon-btn js-share-copy" aria-label="Copier le lien"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg></button>
+              <button class="icon-btn js-fav" aria-label="Ajouter à ma liste"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg></button>
             </div>
           </div>
           ${bookCard(post.book)}
@@ -321,6 +340,16 @@ async function render() {
     // Partage sidebar
     qs('.js-share-tw')?.addEventListener('click', () => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(location.href)}`, '_blank'));
     qs('.js-share-copy')?.addEventListener('click', () => { navigator.clipboard.writeText(location.href); toast('Lien copié'); });
+
+    // Favori (« Ma liste »)
+    const favBtn = qs('.js-fav');
+    const syncFav = () => { const on = Favs.has(post.slug); favBtn.classList.toggle('is-active', on); favBtn.querySelector('svg').setAttribute('fill', on ? 'currentColor' : 'none'); };
+    syncFav();
+    favBtn?.addEventListener('click', () => {
+      const added = Favs.toggle({ slug: post.slug, title: post.title, cover: post.cover_image_url, author: post.book?.author?.name });
+      syncFav();
+      toast(added ? 'Ajouté à ma liste' : 'Retiré de ma liste', { type: 'success' });
+    });
 
     // Livre 3D à côté de la couverture (§8.3A)
     if (window.THREE && !prefersReducedMotion() && post.cover_image_url) {

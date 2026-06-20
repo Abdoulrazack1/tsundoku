@@ -43,7 +43,7 @@ const rss = asyncHandler(async (req, res) => {
 const sitemap = asyncHandler(async (req, res) => {
   const base = siteUrl(req);
   const { posts } = await postModel.list({ limit: 500, status: 'published' });
-  const staticUrls = ['', '/articles.html', '/library.html', '/quotes.html', '/lists.html', '/stats.html', '/journal.html', '/about.html'];
+  const staticUrls = ['', '/articles.html', '/articles.html?type=dossier', '/library.html', '/lists.html', '/tags.html', '/stats.html', '/journal.html', '/about.html', '/newsletter.html', '/legal.html', '/privacy.html'];
   const urls = [
     ...staticUrls.map((u) => `<url><loc>${base}${u || '/'}</loc><changefreq>weekly</changefreq></url>`),
     ...posts.map((p) => `<url><loc>${base}/article.html?slug=${p.slug}</loc><lastmod>${new Date(p.updated_at || p.created_at).toISOString().slice(0, 10)}</lastmod></url>`),

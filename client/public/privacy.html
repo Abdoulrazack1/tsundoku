@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confidentialité — Tsundoku</title>
+  <meta name="description" content="Politique de confidentialité du blog manga Tsundoku.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Space+Grotesk:wght@300..700&family=Noto+Serif+JP:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/reset.css">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/typography.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/dark-mode.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <div data-navbar></div>
+  <main id="main">
+    <header class="page-head container">
+      <p class="kicker">Vos données</p>
+      <h1 class="page-head__title">Confidentialité</h1>
+      <hr class="rule">
+    </header>
+    <section class="section--tight container">
+      <div class="prose measure">
+        <p>Tsundoku respecte ta vie privée et collecte le strict minimum.</p>
+        <h2>Données collectées</h2>
+        <ul>
+          <li><strong>Newsletter</strong> : ton adresse email, uniquement si tu t'abonnes, pour t'envoyer les nouvelles chroniques. Désabonnement possible à tout moment.</li>
+          <li><strong>Statistiques de lecture</strong> : un comptage de vues par article. Ton adresse IP est <em>hachée</em> (irréversible) avant stockage — elle ne permet pas de t'identifier.</li>
+          <li><strong>Préférences locales</strong> : thème, favoris, historique de lecture et brouillons sont stockés dans <em>ton</em> navigateur (localStorage) et ne quittent jamais ton appareil.</li>
+        </ul>
+        <h2>Cookies</h2>
+        <p>Aucun cookie publicitaire ni traceur tiers. Un cookie technique <code>HttpOnly</code> est utilisé uniquement pour la session d'administration (réservée à l'éditeur).</p>
+        <h2>Partage</h2>
+        <p>Aucune donnée n'est vendue ni partagée. Les appels à AniList / aux sources de lecture se font pour récupérer des métadonnées publiques d'œuvres, sans transmettre tes informations.</p>
+        <h2>Tes droits (RGPD)</h2>
+        <p>Tu peux demander l'accès, la rectification ou la suppression de ton email d'abonné à tout moment via le lien de désabonnement ou la <a href="/about.html">page de contact</a>.</p>
+        <p class="text-muted">Dernière mise à jour : 2026.</p>
+      </div>
+    </section>
+  </main>
+  <div data-footer></div>
+  <script type="module" src="/assets/js/main.js"></script>
+</body>
+</html>

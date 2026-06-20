@@ -76,27 +76,30 @@ function footerHTML() {
         <a href="/articles.html?type=dossier">Dossiers</a>
         <a href="/library.html">Bibliothèque</a>
         <a href="/journal.html">Journal de lecture</a>
+        <a href="/tags.html">Tags</a>
+        <a href="/favorites.html">Ma liste</a>
         <a href="/stats.html">En chiffres</a>
       </div>
       <div class="footer__col">
         <h4>Le projet</h4>
         <a href="/about.html">À propos</a>
         <a href="/lists.html">Listes thématiques</a>
+        <a href="/newsletter.html">Newsletter</a>
         <a href="/rss.xml">Flux RSS</a>
         <a href="/admin/login.html">Administration</a>
       </div>
       <div class="footer__col">
         <h4>Suivre</h4>
         <div class="footer__social">
-          <a href="#" aria-label="Instagram" data-cursor="link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
-          <a href="#" aria-label="Goodreads" data-cursor="link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 4v16M15 8a5 5 0 10-3 9"/></svg></a>
-          <a href="#" aria-label="X" data-cursor="link"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 3h3l-7 8 8 10h-6l-5-6-5 6H3l8-9L3 3h6l4 5z"/></svg></a>
+          <a href="https://x.com/20thHeir" target="_blank" rel="noopener" aria-label="X (Twitter)" data-cursor="link"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 3h3l-7 8 8 10h-6l-5-6-5 6H3l8-9L3 3h6l4 5z"/></svg></a>
+          <a href="/rss.xml" aria-label="Flux RSS" data-cursor="link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 11a9 9 0 019 9M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1.5" fill="currentColor"/></svg></a>
+          <a href="/newsletter.html" aria-label="Newsletter" data-cursor="link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
         </div>
       </div>
     </div>
     <div class="footer__bottom">
       <span>© <span id="year">2026</span> Tsundoku — Journal de lectures</span>
-      <span><a href="#">Mentions légales</a> · <a href="#">Confidentialité</a></span>
+      <span><a href="/legal.html">Mentions légales</a> · <a href="/privacy.html">Confidentialité</a></span>
     </div>
   </div></footer>`;
 }
