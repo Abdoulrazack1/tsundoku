@@ -42,6 +42,7 @@ async function loadComments(post) {
         <h3 class="font-display" style="font-size:1.3rem">Laisser un commentaire</h3>
         <input class="input" name="author_name" placeholder="Ton nom" required maxlength="80">
         <textarea class="textarea" name="content" rows="4" placeholder="Ton avis (publié après modération)…" required maxlength="2000"></textarea>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0">
         <button class="btn btn--solid" type="submit">Envoyer</button>
         <p class="newsletter__msg" role="status"></p>
       </form>
@@ -66,7 +67,7 @@ async function loadComments(post) {
     if (!data.author_name?.trim() || !data.content?.trim()) { msg.textContent = 'Nom et commentaire requis.'; return; }
     const btn = form.querySelector('button'); btn.disabled = true;
     try {
-      const r = await api.post(`/posts/${post.slug}/comments`, { author_name: data.author_name, content: data.content });
+      const r = await api.post(`/posts/${post.slug}/comments`, { author_name: data.author_name, content: data.content, website: data.website });
       msg.style.color = 'var(--color-accent)'; msg.textContent = r.message;
       form.reset();
     } catch (err) { msg.style.color = '#e74c3c'; msg.textContent = err.message; }
@@ -358,6 +359,7 @@ async function render() {
               <button class="icon-btn js-share-tw" aria-label="Partager sur X"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 3h3l-7 8 8 10h-6l-5-6-5 6H3l8-9L3 3h6l4 5z"/></svg></button>
               <button class="icon-btn js-share-copy" aria-label="Copier le lien"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg></button>
               <button class="icon-btn js-fav" aria-label="Ajouter à ma liste"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg></button>
+              <button class="icon-btn js-print" aria-label="Imprimer / PDF"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-3a2 2 0 012-2h16a2 2 0 012 2v3a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg></button>
             </div>
           </div>
           ${bookCard(post.book)}
@@ -396,6 +398,7 @@ async function render() {
     // Partage sidebar
     qs('.js-share-tw')?.addEventListener('click', () => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(location.href)}`, '_blank'));
     qs('.js-share-copy')?.addEventListener('click', () => { navigator.clipboard.writeText(location.href); toast('Lien copié'); });
+    qs('.js-print')?.addEventListener('click', () => window.print());
 
     // Favori (« Ma liste »)
     const favBtn = qs('.js-fav');

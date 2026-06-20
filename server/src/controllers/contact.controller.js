@@ -7,6 +7,7 @@ const { escapeHtml } = require('../utils/sanitize');
 const { AppError } = require('../middlewares/error.middleware');
 
 const send = asyncHandler(async (req, res) => {
+  if (req.body.website) return res.status(201).json({ message: 'Merci ! Ton message a bien été envoyé.' }); // honeypot
   const { name, email, subject, message } = req.body;
   await contactModel.create({
     name: escapeHtml(name.trim()),

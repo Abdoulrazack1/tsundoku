@@ -31,10 +31,33 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollReveal();
 
   initSEO();
+  initPWA();
 
   const year = qs('#year');
   if (year) year.textContent = new Date().getFullYear();
 });
+
+/** PWA : manifest, thème, favicon, service worker. */
+function initPWA() {
+  const head = document.head;
+  const addLink = (rel, href, attrs = {}) => {
+    if (document.querySelector(`link[rel="${rel}"]`)) return;
+    const l = document.createElement('link'); l.rel = rel; l.href = href;
+    Object.entries(attrs).forEach(([k, v]) => l.setAttribute(k, v));
+    head.append(l);
+  };
+  addLink('manifest', '/manifest.webmanifest');
+  addLink('icon', '/assets/img/icon.svg', { type: 'image/svg+xml' });
+  addLink('apple-touch-icon', '/assets/img/icon.svg');
+  if (!document.querySelector('meta[name="theme-color"]')) {
+    const m = document.createElement('meta'); m.name = 'theme-color';
+    m.content = document.documentElement.getAttribute('data-theme') === 'dark' ? '#0d0d0d' : '#f5f0e8';
+    head.append(m);
+  }
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(() => {}));
+  }
+}
 
 /** SEO de base appliqué à toutes les pages (canonical + Open Graph par défaut).
  *  Les pages riches (article) surchargent ensuite ces balises. */

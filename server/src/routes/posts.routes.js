@@ -5,6 +5,7 @@ const ctrl = require('../controllers/posts.controller');
 const comments = require('../controllers/comments.controller');
 const { validate } = require('../middlewares/validate.middleware');
 const { requireAuth } = require('../middlewares/auth.middleware');
+const { submitLimiter } = require('../middlewares/rateLimit.middleware');
 const schemas = require('../utils/validators');
 
 // Lecture publique
@@ -18,7 +19,7 @@ router.post('/:slug/view', ctrl.incrementView);
 
 // Commentaires (public : lecture + dépôt modéré)
 router.get('/:slug/comments', comments.listForPost);
-router.post('/:slug/comments', validate(schemas.commentCreate), comments.create);
+router.post('/:slug/comments', submitLimiter, validate(schemas.commentCreate), comments.create);
 
 // Écriture admin
 router.post('/', requireAuth, validate(schemas.postCreate), ctrl.create);

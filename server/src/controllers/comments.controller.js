@@ -16,6 +16,8 @@ const listForPost = asyncHandler(async (req, res) => {
 
 /** Dépôt d'un commentaire (public, modéré : en attente d'approbation). */
 const create = asyncHandler(async (req, res) => {
+  // Honeypot : un bot remplit le champ caché -> on feint le succès sans stocker.
+  if (req.body.website) return res.status(201).json({ message: 'Merci ! Ton commentaire sera publié après modération.' });
   const post = await postModel.getBySlug(req.params.slug);
   if (!post) throw new AppError('Article introuvable.', 404);
   const ipHash = crypto.createHash('sha256').update(req.ip || '').digest('hex');

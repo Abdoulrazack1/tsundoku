@@ -21,4 +21,13 @@ const authLimiter = rateLimit({
   message: { error: 'Trop de tentatives de connexion. Réessayez plus tard.' },
 });
 
-module.exports = { apiLimiter, authLimiter };
+/** Limiteur dépôt public (commentaires, contact) : 5 / 10 min par IP. */
+const submitLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Trop d\'envois. Réessaie dans quelques minutes.' },
+});
+
+module.exports = { apiLimiter, authLimiter, submitLimiter };

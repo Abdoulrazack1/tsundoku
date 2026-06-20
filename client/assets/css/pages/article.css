@@ -90,6 +90,18 @@
 /* Livre 3D (Three.js) */
 .book-3d { width: 100%; height: 360px; }
 
+/* Impression / PDF — ne garde que le contenu éditorial */
+@media print {
+  .navbar, .footer, .article-sidebar, .article-nav, .audio-player, .comments-section,
+  .to-top, .zen-toggle, .zen-controls, .progress-bar-read, .cursor-dot, .cursor-circle,
+  .section--tight, #article + .section { display: none !important; }
+  .article-layout { grid-template-columns: 1fr !important; }
+  .article-body { grid-column: 1 !important; max-width: none !important; font-size: 12pt; color: #000; }
+  .article-cover { max-width: 360px; }
+  a { color: #000; text-decoration: none; }
+  body { background: #fff; }
+}
+
 /* Mode Zen — §21.5 */
 body.zen .navbar, body.zen .footer, body.zen .article-sidebar, body.zen .article-nav, body.zen .audio-player, body.zen .article-cover { display: none !important; }
 body.zen .article-body { max-width: 720px; }

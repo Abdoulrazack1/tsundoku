@@ -1,0 +1,21 @@
+{
+  "name": "Tsundoku — Journal de lectures manga",
+  "short_name": "Tsundoku",
+  "description": "Chroniques, analyses et dossiers manga — une expérience de lecture contemplative.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f5f0e8",
+  "theme_color": "#1a1a1a",
+  "icons": [
+    { "src": "/assets/img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/assets/img/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Chroniques", "url": "/articles.html" },
+    { "name": "Dossiers", "url": "/articles.html?type=dossier" },
+    { "name": "Au hasard", "url": "/articles.html" }
+  ]
+}
