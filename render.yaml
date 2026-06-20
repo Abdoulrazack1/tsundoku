@@ -1,0 +1,36 @@
+# Déploiement Render — service web Node (mono-serveur : sert l'API ET le front).
+# Base de données MySQL externe (Aiven free tier) : renseigner DB_* dans le dashboard.
+services:
+  - type: web
+    name: tsundoku
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      # --- À renseigner manuellement (Aiven MySQL) ---
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: ANILIST_USERNAME
+        sync: false
