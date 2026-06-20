@@ -29,3 +29,23 @@ body, .navbar, .card, .footer, .input, .textarea, .select, .filter-bar, .chip, .
 [data-theme="dark"] .hero__overlay { background: linear-gradient(to bottom, rgba(13,13,13,0) 0%, rgba(13,13,13,0.7) 60%, rgba(13,13,13,1) 100%); }
 [data-theme="dark"] .now-reading { background: #000; }
 [data-theme="dark"] ::selection { color: var(--bg); }
+
+/* Thème sépia — confort de lecture (lumière chaude) */
+[data-theme="sepia"] {
+  --bg: #f3e9d2;
+  --ink: #4a3b29;
+  --surface: #f8f1e0;
+  --muted: #8a7456;
+  --line: #e0d3b8;
+  color-scheme: light;
+}
+[data-theme="sepia"] body {
+  background-color: var(--bg);
+  background-image: radial-gradient(120% 80% at 15% 0%, rgba(255, 250, 235, 0.5), transparent 60%);
+}
+[data-theme="sepia"] .navbar.is-scrolled { background: rgba(243, 233, 210, 0.85); border-bottom-color: var(--line); }
+[data-theme="sepia"] .filter-bar { background: rgba(243, 233, 210, 0.9); }
+[data-theme="sepia"] .search-overlay { background: rgba(243, 233, 210, 0.97); }
+[data-theme="sepia"] .now-reading { background: #3a2f22; }
+[data-theme="sepia"] .theme-toggle .sun { display: block; }
+[data-theme="sepia"] .theme-toggle .moon { display: none; }

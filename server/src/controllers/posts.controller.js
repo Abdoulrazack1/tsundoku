@@ -34,6 +34,11 @@ const featured = asyncHandler(async (req, res) => {
   res.json({ post });
 });
 
+const random = asyncHandler(async (req, res) => {
+  const row = await postModel.random();
+  res.json({ slug: row?.slug || null });
+});
+
 const search = asyncHandler(async (req, res) => {
   const q = (req.query.q || '').trim();
   if (!q) return res.json({ posts: [], total: 0 });
@@ -100,4 +105,4 @@ const remove = asyncHandler(async (req, res) => {
   res.json({ message: 'Article supprimé.' });
 });
 
-module.exports = { list, featured, search, getBySlug, getById, incrementView, create, update, updateStatus, remove };
+module.exports = { list, featured, random, search, getBySlug, getById, incrementView, create, update, updateStatus, remove };

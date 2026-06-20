@@ -1,6 +1,15 @@
 // Fonctionnalités transverses : lightbox planches, retour-haut, raccourcis, favoris.
 import { qs } from '../core/utils.js';
 import { toast } from '../core/toast.js';
+import { api } from '../core/api.js';
+
+async function goRandom() {
+  try {
+    const { slug } = await api.get('/posts/random');
+    if (slug) location.href = `/article.html?slug=${slug}`;
+    else toast('Aucune chronique publiée pour le moment.');
+  } catch { toast('Erreur', { type: 'error' }); }
+}
 
 /* ---------- Favoris (localStorage) ---------- */
 const FAV_KEY = 'tsundoku_favs';
@@ -57,7 +66,11 @@ function initShortcuts() {
     if (e.key === '/') { e.preventDefault(); qs('.js-search-open')?.click(); }
     else if (e.key.toLowerCase() === 't') qs('.theme-toggle')?.click();
     else if (e.key.toLowerCase() === 'h') location.href = '/';
-    else if (e.key === '?') toast('Raccourcis : / ou Ctrl+K recherche · T thème · H accueil', { duration: 5000 });
+    else if (e.key.toLowerCase() === 'r') goRandom();
+    else if (e.key === '?') toast('Raccourcis : / ou Ctrl+K recherche · R au hasard · T thème · H accueil', { duration: 5000 });
+  });
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.js-random')) { e.preventDefault(); goRandom(); }
   });
 }
 

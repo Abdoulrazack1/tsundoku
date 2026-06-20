@@ -9,6 +9,7 @@ const schemas = require('../utils/validators');
 // Lecture publique
 router.get('/', validate(schemas.postQuery, 'query'), ctrl.list);
 router.get('/featured', ctrl.featured);
+router.get('/random', ctrl.random);
 router.get('/search', ctrl.search);
 router.get('/id/:id', requireAuth, ctrl.getById); // admin : par ID, contenu complet
 router.get('/:slug', ctrl.getBySlug);

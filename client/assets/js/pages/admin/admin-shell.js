@@ -9,7 +9,8 @@ const NAV = [
   ['Tableau de bord', '/admin/dashboard.html', 'grid'],
   ['Articles', '/admin/articles.html', 'file'],
   ['Nouvel article', '/admin/post-editor.html', 'plus'],
-  ['Livres / Mangas', '/admin/books.html', 'book'],
+  ['Séries / Mangas', '/admin/books.html', 'book'],
+  ['Médiathèque', '/admin/media.html', 'image'],
   ['Intégrations', '/admin/integrations.html', 'sync'],
 ];
 
@@ -19,6 +20,7 @@ const ICONS = {
   plus: '<path d="M12 5v14M5 12h14"/>',
   book: '<path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>',
   sync: '<path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+  image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>',
 };
 
 /** Vérifie la session ; redirige vers login si non authentifié. */

@@ -67,7 +67,8 @@
           <div class="editor-panel">
             <h4>Série liée</h4>
             <div style="display:flex;gap:6px">
-              <input class="input" id="series-q" placeholder="Chercher (Anilist)…" style="flex:1">
+              <select class="select" id="series-source" style="width:auto;padding-right:24px"><option value="anilist">Anilist</option><option value="inko">Inko</option></select>
+              <input class="input" id="series-q" placeholder="Chercher…" style="flex:1">
               <button class="btn btn--sm" id="series-search">OK</button>
             </div>
             <div id="series-results" style="margin-top:8px;display:grid;gap:6px;max-height:220px;overflow:auto"></div>

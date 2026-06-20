@@ -306,12 +306,16 @@ async function incrementViews(id, ipHash, userAgent) {
   await pool.query('INSERT INTO post_views (post_id, ip_hash, user_agent) VALUES (?, ?, ?)', [id, ipHash || null, userAgent || null]);
 }
 
+async function random() {
+  return queryOne("SELECT slug FROM posts WHERE status='published' ORDER BY RAND() LIMIT 1");
+}
+
 async function slugExists(slug, excludeId = null) {
   const row = await queryOne('SELECT id FROM posts WHERE slug = :slug AND (:ex IS NULL OR id <> :ex)', { slug, ex: excludeId });
   return !!row;
 }
 
 module.exports = {
-  list, getFeatured, getBySlug, getById, getAdjacent,
+  list, getFeatured, getBySlug, getById, getAdjacent, random,
   create, update, remove, incrementViews, slugExists,
 };

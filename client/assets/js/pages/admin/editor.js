@@ -208,20 +208,27 @@ function initSeriesPicker() {
   const box = qs('#series-results');
   async function doSearch() {
     const q = qs('#series-q').value.trim(); if (!q) return;
+    const source = qs('#series-source').value;
     box.innerHTML = '<div class="spinner"></div>';
     try {
-      const { results } = await api.auth.get(`/integration/anilist/search?q=${encodeURIComponent(q)}`);
+      const url = source === 'inko'
+        ? `/integration/inko/search?q=${encodeURIComponent(q)}&source=weebcentral`
+        : `/integration/anilist/search?q=${encodeURIComponent(q)}`;
+      const { results } = await api.auth.get(url);
       box.innerHTML = results.map((r, i) => `<button class="series-hit" data-i="${i}" style="display:flex;gap:8px;align-items:center;text-align:left;padding:6px;border:1px solid var(--line);border-radius:6px">
         <img src="${escapeHtml(r.cover_image_url || '')}" style="width:32px;height:46px;object-fit:cover;border-radius:3px;flex:none" alt="" loading="lazy">
-        <span style="font-size:.76rem">${escapeHtml(r.title)}${r.publication_year ? ` (${r.publication_year})` : ''}<br><span class="text-muted">${escapeHtml(r.author || '')}</span></span>
+        <span style="font-size:.76rem">${escapeHtml(r.title)}${r.publication_year ? ` (${r.publication_year})` : ''}<br><span class="text-muted">${escapeHtml(r.author || r.source || '')}</span></span>
       </button>`).join('');
-      box.querySelectorAll('.series-hit').forEach((b) => b.addEventListener('click', () => importSerie(results[b.dataset.i])));
+      box.querySelectorAll('.series-hit').forEach((b) => b.addEventListener('click', () => importSerie(results[b.dataset.i], source)));
     } catch (e) { box.innerHTML = `<p class="text-muted" style="font-size:.74rem">${e.message}</p>`; }
   }
-  async function importSerie(r) {
+  async function importSerie(r, source) {
     box.innerHTML = '<div class="spinner"></div>';
     try {
-      const { book, created } = await api.auth.post('/books/import', { source: 'anilist', anilist_id: r.anilist_id });
+      const payload = source === 'inko'
+        ? { source: 'inko', inko_id: r.inko_id, inko_source: r.source }
+        : { source: 'anilist', anilist_id: r.anilist_id };
+      const { book, created } = await api.auth.post('/books/import', payload);
       // ajoute/sélectionne la série dans le select
       const sel = qs('#book-select');
       let opt = [...sel.options].find((o) => o.value == book.id);

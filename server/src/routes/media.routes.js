@@ -6,6 +6,7 @@ const { requireAuth } = require('../middlewares/auth.middleware');
 const { upload } = require('../services/upload.service');
 
 router.get('/proxy', ctrl.proxy);
+router.get('/', requireAuth, ctrl.list);
 router.post('/upload', requireAuth, upload.single('image'), ctrl.upload);
 router.delete('/:filename', requireAuth, ctrl.remove);
 

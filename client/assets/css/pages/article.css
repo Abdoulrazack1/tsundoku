@@ -63,6 +63,13 @@
 .rating-axis__val { font-family: var(--font-display); font-size: 1.6rem; color: var(--color-accent); line-height: 1.1; }
 .spoiler-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--color-ink); color: var(--color-ink-light); font-size: var(--fs-small); letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; }
 
+/* Gabarit Dossier (long format) — plus large, en-tête appuyé */
+.is-dossier .article-hero::before { content: "Dossier"; display: inline-block; font-family: var(--font-ui); font-size: var(--fs-small); letter-spacing: 0.2em; text-transform: uppercase; color: #fff; background: var(--color-accent); padding: 5px 14px; border-radius: 4px; margin-bottom: var(--space-md); }
+.is-dossier .article-hero__title { font-size: clamp(2.8rem, 6vw, 5rem); }
+.is-dossier .article-layout { grid-template-columns: 1fr minmax(0, 760px) 1fr; }
+.is-dossier .article-body { font-size: 1.18rem; }
+.is-dossier .article-body h2 { font-size: clamp(1.9rem, 3vw, 2.6rem); }
+
 /* Rideau anti-spoilers */
 .spoiler-reveal { display: block; width: 100%; max-width: var(--measure); margin: var(--space-md) auto; padding: 16px; border: 1px dashed var(--color-accent); border-radius: var(--radius-sm); background: rgba(var(--color-accent-rgb), 0.05); color: var(--ink); font-family: var(--font-ui); font-size: var(--fs-ui); letter-spacing: 0.04em; cursor: pointer; transition: background var(--t-fast); }
 .spoiler-reveal:hover { background: rgba(var(--color-accent-rgb), 0.12); }

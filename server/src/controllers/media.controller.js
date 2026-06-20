@@ -12,6 +12,15 @@ const upload = asyncHandler(async (req, res) => {
   res.status(201).json({ url, filename: req.file.filename, size: req.file.size });
 });
 
+const list = asyncHandler(async (req, res) => {
+  const files = fs.existsSync(uploadDir) ? fs.readdirSync(uploadDir) : [];
+  const items = files
+    .filter((f) => /\.(jpe?g|png|webp|avif|gif|svg)$/i.test(f))
+    .map((f) => { const st = fs.statSync(path.join(uploadDir, f)); return { filename: f, url: `/uploads/${f}`, size: st.size, mtime: st.mtimeMs }; })
+    .sort((a, b) => b.mtime - a.mtime);
+  res.json({ media: items });
+});
+
 const remove = asyncHandler(async (req, res) => {
   const safe = path.basename(req.params.filename); // empêche le path traversal
   const filePath = path.join(uploadDir, safe);
@@ -41,4 +50,4 @@ const proxy = asyncHandler(async (req, res) => {
   res.send(Buffer.from(await upstream.arrayBuffer()));
 });
 
-module.exports = { upload, remove, proxy };
+module.exports = { upload, list, remove, proxy };

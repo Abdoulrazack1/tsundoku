@@ -298,6 +298,9 @@ async function render() {
     const toc = buildTOC();
     if (toc) { qs('#toc-slot').innerHTML = toc; scrollSpy(); }
 
+    // Gabarit dédié pour les dossiers (long format)
+    root.classList.toggle('is-dossier', post.type === 'dossier');
+
     // Rideau anti-spoilers (cliquable)
     if (post.has_spoilers) {
       const body = qs('#article-body');

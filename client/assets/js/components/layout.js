@@ -36,6 +36,9 @@ function navbarHTML() {
       ${NAV_LINKS.map(([t, h]) => `<a class="nav-link" href="${h}" data-cursor="link"><span>${t}</span></a>`).join('')}
     </div>
     <div class="navbar__actions">
+      <button class="icon-btn js-random" aria-label="Une chronique au hasard" title="Au hasard (R)" data-cursor="link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/><circle cx="16" cy="16" r="1.3" fill="currentColor"/><circle cx="16" cy="8" r="1.3" fill="currentColor"/><circle cx="8" cy="16" r="1.3" fill="currentColor"/></svg>
+      </button>
       ${searchIcon()}
       ${themeIcon()}
       <button class="nav-burger" aria-label="Ouvrir le menu" aria-expanded="false" data-cursor="link">
