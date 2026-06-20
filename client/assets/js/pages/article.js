@@ -28,7 +28,19 @@ function commentNode(c) {
     <div class="comment__head"><strong>${escapeHtml(c.author_name)}</strong><span class="text-muted">${date}</span></div>
     <p>${escapeHtml(c.content)}</p>
     ${replies}
+    <button class="comment-reply-btn" data-reply="${c.id}">Répondre</button>
+    <div class="reply-slot" data-slot="${c.id}"></div>
   </div>`;
+}
+
+function replyFormHtml(parentId) {
+  return `<form class="comment-form reply-form" data-parent="${parentId}" style="margin-top:12px">
+    <input class="input" name="author_name" placeholder="Ton nom" required maxlength="80">
+    <textarea class="textarea" name="content" rows="3" placeholder="Ta réponse (modérée)…" required maxlength="2000"></textarea>
+    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0">
+    <button class="btn btn--sm btn--solid" type="submit">Répondre</button>
+    <p class="newsletter__msg" role="status"></p>
+  </form>`;
 }
 
 async function loadComments(post) {
@@ -58,6 +70,28 @@ async function loadComments(post) {
     } catch { /* ignore */ }
   }
   await refresh();
+
+  // Réponses imbriquées
+  qs('#comments-list', sec).addEventListener('click', (e) => {
+    const btn = e.target.closest('.comment-reply-btn'); if (!btn) return;
+    const slot = sec.querySelector(`.reply-slot[data-slot="${btn.dataset.reply}"]`);
+    if (slot.innerHTML) { slot.innerHTML = ''; return; }
+    slot.innerHTML = replyFormHtml(btn.dataset.reply);
+  });
+  qs('#comments-list', sec).addEventListener('submit', async (e) => {
+    if (!e.target.classList.contains('reply-form')) return;
+    e.preventDefault();
+    const form = e.target;
+    const msg = form.querySelector('.newsletter__msg');
+    const data = Object.fromEntries(new FormData(form));
+    if (!data.author_name?.trim() || !data.content?.trim()) { msg.textContent = 'Nom et réponse requis.'; return; }
+    form.querySelector('button').disabled = true;
+    try {
+      const r = await api.post(`/posts/${post.slug}/comments`, { author_name: data.author_name, content: data.content, parent_id: Number(form.dataset.parent), website: data.website });
+      msg.style.color = 'var(--color-accent)'; msg.textContent = r.message;
+      form.reset();
+    } catch (err) { msg.style.color = '#e74c3c'; msg.textContent = err.message; }
+  });
 
   qs('#comment-form', sec).addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -172,6 +206,17 @@ function setSEO(post) {
   };
   const s = document.createElement('script'); s.type = 'application/ld+json'; s.textContent = JSON.stringify(ld);
   document.head.append(s);
+  // Fil d'Ariane structuré
+  const crumb = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: location.origin + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Chroniques', item: location.origin + '/articles.html' },
+      { '@type': 'ListItem', position: 3, name: post.title, item: location.href },
+    ],
+  };
+  const s2 = document.createElement('script'); s2.type = 'application/ld+json'; s2.textContent = JSON.stringify(crumb);
+  document.head.append(s2);
 }
 
 function buildTOC() {
@@ -263,6 +308,31 @@ function fallbackSpeak(post) {
   speechSynthesis.speak(u);
 }
 
+/* ---- Confort de lecture : taille de police + police lisible (persisté) ---- */
+function initReaderComfort() {
+  const body = qs('#article-body');
+  const ctrls = qs('.reader-ctrls');
+  if (!body || !ctrls) return;
+  const KEY = 'tsundoku_reader';
+  let st = { size: 1, dys: false };
+  try { st = { ...st, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { /* ignore */ }
+  const apply = () => {
+    body.style.fontSize = `${st.size}rem`;
+    body.classList.toggle('is-dyslexic', st.dys);
+    qs('.reader-dys', ctrls).classList.toggle('is-active', st.dys);
+    localStorage.setItem(KEY, JSON.stringify(st));
+  };
+  apply();
+  ctrls.addEventListener('click', (e) => {
+    const r = e.target.closest('[data-r]')?.dataset.r; if (!r) return;
+    if (r === '+') st.size = Math.min(1.6, +(st.size + 0.08).toFixed(2));
+    else if (r === '-') st.size = Math.max(0.85, +(st.size - 0.08).toFixed(2));
+    else if (r === 'reset') st.size = 1;
+    else if (r === 'dys') st.dys = !st.dys;
+    apply();
+  });
+}
+
 /* ---- Mode Zen (§21.5) ---- */
 function initZen() {
   const toggle = document.createElement('button');
@@ -322,6 +392,9 @@ async function render() {
     const cat = post.categories?.[0];
 
     root.innerHTML = `
+      <nav class="breadcrumbs measure" aria-label="Fil d'Ariane">
+        <a href="/">Accueil</a><span>›</span><a href="/articles.html">${TYPE_LABEL[post.type] === 'Dossier' ? 'Dossiers' : 'Chroniques'}</a><span>›</span><span aria-current="page">${escapeHtml(post.title)}</span>
+      </nav>
       <header class="article-hero measure">
         <p class="article-hero__meta">${TYPE_LABEL[post.type] ? `<span class="text-accent">${TYPE_LABEL[post.type]}</span> · ` : ''}${cat ? `${escapeHtml(cat.name)} · ` : ''}${post.reading_time || 1} min de lecture</p>
         <h1 class="article-hero__title" id="art-title">${escapeHtml(post.title)}</h1>
@@ -363,6 +436,15 @@ async function render() {
             </div>
           </div>
           ${bookCard(post.book)}
+          <div class="sidebar-card reader-card">
+            <h4>Confort de lecture</h4>
+            <div class="reader-ctrls">
+              <button data-r="-" aria-label="Réduire la police">A−</button>
+              <button data-r="reset" aria-label="Taille par défaut">A</button>
+              <button data-r="+" aria-label="Agrandir la police">A+</button>
+              <button data-r="dys" class="reader-dys" aria-label="Police lisible">Police lisible</button>
+            </div>
+          </div>
         </aside>
       </div>
 
@@ -391,6 +473,7 @@ async function render() {
 
     setSEO(post);
     initReadingProgress();
+    initReaderComfort();
     initAudio(post);
     initZen();
     initSelectionShare(post);

@@ -9,6 +9,7 @@ const state = {
   category: getParam('category') || '',
   type: getParam('type') || '',
   sort: getParam('sort') || 'newest',
+  rating: getParam('rating') || '',
   page: parseInt(getParam('page'), 10) || 1,
   view: localStorage.getItem('tsundoku_view') || 'grid',
   limit: 9,
@@ -33,6 +34,7 @@ function syncURL() {
   const p = new URLSearchParams();
   if (state.category) p.set('category', state.category);
   if (state.type) p.set('type', state.type);
+  if (state.rating) p.set('rating', state.rating);
   if (state.sort !== 'newest') p.set('sort', state.sort);
   if (state.page > 1) p.set('page', state.page);
   history.replaceState(null, '', `${location.pathname}${p.toString() ? '?' + p : ''}`);
@@ -59,7 +61,7 @@ async function load() {
   grid.innerHTML = '<div class="spinner"></div>';
   syncURL();
   try {
-    const data = await api.get(`/posts?page=${state.page}&limit=${state.limit}&sort=${state.sort}${state.category ? '&category=' + state.category : ''}${state.type ? '&type=' + state.type : ''}`);
+    const data = await api.get(`/posts?page=${state.page}&limit=${state.limit}&sort=${state.sort}${state.category ? '&category=' + state.category : ''}${state.type ? '&type=' + state.type : ''}${state.rating ? '&rating_min=' + state.rating : ''}`);
     qs('#articles-count').textContent = `${data.total} chronique${data.total > 1 ? 's' : ''} publiée${data.total > 1 ? 's' : ''}.`;
 
     if (!data.posts.length) {
@@ -105,6 +107,9 @@ function initControls() {
   const sort = qs('#sort-select');
   sort.value = state.sort;
   sort.addEventListener('change', () => { state.sort = sort.value; state.page = 1; load(); });
+
+  const rating = qs('#rating-select');
+  if (rating) { rating.value = state.rating; rating.addEventListener('change', () => { state.rating = rating.value; state.page = 1; load(); }); }
 
   qsa('.view-toggle__btn').forEach((btn) => {
     btn.classList.toggle('is-active', btn.dataset.view === state.view);
