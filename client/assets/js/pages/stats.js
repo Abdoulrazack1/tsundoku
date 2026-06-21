@@ -17,6 +17,53 @@ function statCards(t) {
   return cards.map(([n, l]) => `<div class="stat-card reveal"><div class="stat-card__num">${n ?? 0}</div><div class="stat-card__label">${l}</div></div>`).join('');
 }
 
+/* ---- Gamification : profil de lecteur depuis Anilist (badges + niveau) §25 ---- */
+const BADGES = [
+  { id: 'first', icon: '🌱', label: 'Premiers pas', test: (s) => s.count >= 1 },
+  { id: 'reader', icon: '📚', label: 'Lecteur assidu', test: (s) => s.completed >= 25 },
+  { id: 'devourer', icon: '🔥', label: 'Dévoreur', test: (s) => s.chapters >= 10000 },
+  { id: 'explorer', icon: '🧭', label: 'Explorateur de genres', test: (s) => s.genres >= 8 },
+  { id: 'completionist', icon: '🏆', label: 'Complétiste', test: (s) => s.completed >= 100 },
+  { id: 'critic', icon: '⭐', label: 'Œil critique', test: (s) => s.mean >= 1 },
+  { id: 'marathon', icon: '🌙', label: 'Marathonien', test: (s) => s.chapters >= 25000 },
+  { id: 'collector', icon: '🗂️', label: 'Collectionneur', test: (s) => s.count >= 300 },
+];
+
+function levelFromChapters(ch) {
+  const level = Math.max(1, Math.floor(Math.sqrt(ch / 200)) + 1);
+  const cur = Math.pow(level - 1, 2) * 200;
+  const next = Math.pow(level, 2) * 200;
+  const pct = Math.min(100, Math.round(((ch - cur) / (next - cur)) * 100));
+  return { level, pct, next };
+}
+
+async function loadReaderProfile() {
+  try {
+    const data = await api.get('/integration/anilist/user');
+    if (!data.configured) return;
+    const m = data.user?.statistics?.manga || {};
+    const completed = (data.entries || []).filter((e) => e.status === 'lu' || e.status === 'relu').length;
+    const genres = new Set((data.entries || []).flatMap((e) => e.genres || [])).size;
+    const s = { count: m.count || 0, chapters: m.chaptersRead || 0, mean: m.meanScore || 0, completed, genres };
+    const { level, pct, next } = levelFromChapters(s.chapters);
+    const unlocked = BADGES.filter((b) => b.test(s));
+
+    const sec = qs('#reader-profile');
+    sec.hidden = false;
+    sec.innerHTML = `
+      <div class="section-head"><p class="kicker">Gamification</p><h2 class="section-head__title font-display" style="font-size:2.2rem">Mon profil de lecteur</h2></div>
+      <div class="reader-level">
+        <div class="reader-level__num">Niveau ${level}</div>
+        <div class="progress" style="max-width:520px;margin-top:10px"><div class="progress__fill" style="width:0"></div></div>
+        <p class="text-muted" style="margin-top:8px;font-size:.85rem">${s.chapters.toLocaleString('fr-FR')} chapitres lus · prochain palier à ${next.toLocaleString('fr-FR')}</p>
+      </div>
+      <div class="badges-grid">
+        ${BADGES.map((b) => { const on = unlocked.includes(b); return `<div class="badge ${on ? 'is-unlocked' : ''}" title="${b.label}"><span class="badge__icon">${b.icon}</span><span class="badge__label">${b.label}</span></div>`; }).join('')}
+      </div>`;
+    requestAnimationFrame(() => { const f = qs('#reader-profile .progress__fill'); if (f) f.style.width = `${pct}%`; });
+  } catch { /* Anilist non configuré : section masquée */ }
+}
+
 async function load() {
   try {
     const data = await api.get('/stats/public');
@@ -53,4 +100,5 @@ async function load() {
   }
 }
 
+loadReaderProfile();
 load();
