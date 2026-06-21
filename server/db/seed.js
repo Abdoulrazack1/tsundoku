@@ -55,4 +55,8 @@ async function main() {
   await conn.end();
 }
 
-main().catch((err) => { console.error('✗ Seed échoué :', err.message); process.exit(1); });
+module.exports = main;
+
+if (require.main === module) {
+  main().catch((err) => { console.error('✗ Seed échoué :', err.message); process.exit(1); });
+}

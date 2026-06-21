@@ -1,0 +1,46 @@
+# Déploiement local/serveur en une commande : « docker compose up -d »
+# Lance MySQL + l'app (API + front). Schéma chargé au 1er démarrage, amorçage auto.
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: tsundoku
+      MYSQL_DATABASE: tsundoku
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./server/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-ptsundoku"]
+      interval: 8s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: tsundoku
+      DB_NAME: tsundoku
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-change_me_access_secret}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change_me_refresh_secret}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      INKO_BASE: ${INKO_BASE:-http://host.docker.internal:8088/api}
+      ANILIST_USERNAME: ${ANILIST_USERNAME:-}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@tsundoku.app}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-tsundoku2026}
+    command: ["sh", "-c", "node db/ensure-seed.js && node server.js"]
+    ports:
+      - "3000:3000"
+
+volumes:
+  dbdata:

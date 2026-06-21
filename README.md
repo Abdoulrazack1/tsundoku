@@ -120,9 +120,26 @@ tsundoku/
     └── uploads/            # médias + couvertures générées
 ```
 
-## Déploiement (cible gratuite, cf. cahier des charges §12)
-Front → Vercel/Netlify · API → Render · BDD → Aiven (MySQL) · Médias → Cloudinary.
-En production : durcir le CSP (Helmet), définir les secrets JWT, `NODE_ENV=production`.
+## Déploiement
+
+### Option 1 — Docker Compose (tout-en-un, recommandé)
+Lance l'app **+ MySQL** en une commande, schéma chargé et base amorcée automatiquement :
+```bash
+docker compose up -d        # → http://localhost:3000
+```
+Personnalisable via variables d'env (`JWT_ACCESS_SECRET`, `ANILIST_USERNAME`, `SEED_ADMIN_PASSWORD`…).
+
+### Option 2 — Image Docker pré-construite (publiée par la CI)
+```bash
+docker run -p 3000:3000 --env-file server/.env ghcr.io/abdoulrazack1/tsundoku:latest
+```
+L'image est reconstruite et publiée sur **ghcr.io** à chaque push (workflow `docker.yml`).
+
+### Option 3 — PaaS gratuit (cf. cahier §12)
+`render.yaml` fourni (Render web service) + BDD MySQL managée (Aiven). CI/CD GitHub Actions
+(`ci.yml`) : tests → déclenchement du `RENDER_DEPLOY_HOOK`.
+
+En production : durcir le CSP (Helmet), définir des secrets JWT forts, `NODE_ENV=production`.
 
 ---
 © 2026 Tsundoku — Journal de lectures.
