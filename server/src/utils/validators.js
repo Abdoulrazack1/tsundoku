@@ -64,7 +64,7 @@ const schemas = {
 
   postQuery: Joi.object({
     page: Joi.number().integer().min(1).default(1),
-    limit: Joi.number().integer().min(1).max(50).default(9),
+    limit: Joi.number().integer().min(1).max(100).default(9),
     category: slug.allow(''),
     tag: slug.allow(''),
     type: Joi.string().valid('chronique', 'journal', 'liste', 'analyse', 'dossier').allow(''),
