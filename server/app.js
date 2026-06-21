@@ -15,6 +15,7 @@ const apiRoutes = require('./src/routes');
 const feed = require('./src/controllers/feed.controller');
 const { apiLimiter } = require('./src/middlewares/rateLimit.middleware');
 const { notFound, errorHandler } = require('./src/middlewares/error.middleware');
+const seoRender = require('./src/middlewares/seo.middleware');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -46,6 +47,8 @@ app.use('/api', apiLimiter, apiRoutes);
 const clientDir = path.join(__dirname, '..', 'client');
 app.use('/assets', express.static(path.join(clientDir, 'assets'), { maxAge: env.isProd ? '7d' : 0 }));
 app.use('/uploads', express.static(path.join(clientDir, 'uploads')));
+// Injection SEO côté serveur pour les pages de contenu (avant le statique)
+app.use(seoRender);
 app.use(express.static(path.join(clientDir, 'public'), { extensions: ['html'] }));
 
 // 404 API + page 404 front

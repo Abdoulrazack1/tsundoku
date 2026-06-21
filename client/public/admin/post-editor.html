@@ -25,6 +25,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@1.4.2/dist/delimiter.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@2.9.3/dist/image.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 </head>
 <body>
   <div class="admin">
@@ -34,8 +36,8 @@
         <h1 class="font-display" id="editor-heading">Nouvel article</h1>
         <div class="cluster">
           <span class="text-muted" id="word-count" style="font-size:.78rem">0 mot · 0 min</span>
-          <label class="btn btn--sm" style="cursor:pointer" title="Importer un article complet (.md / .html / .txt)">Importer un fichier
-            <input type="file" id="import-file" accept=".md,.markdown,.html,.htm,.txt" hidden>
+          <label class="btn btn--sm" style="cursor:pointer" title="Importer un article complet (.docx / .pdf / .md / .html / .txt) — remis aux polices et couleurs du site">Importer un fichier
+            <input type="file" id="import-file" accept=".docx,.pdf,.md,.markdown,.html,.htm,.txt" hidden>
           </label>
           <button class="btn btn--sm" id="preview-btn">Prévisualiser</button>
           <a class="btn btn--sm" href="/admin/dashboard.html">← Retour</a>

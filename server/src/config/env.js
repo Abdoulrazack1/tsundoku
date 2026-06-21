@@ -32,6 +32,9 @@ const env = {
   logLevel: process.env.LOG_LEVEL || 'info',
   inkoBase: process.env.INKO_BASE || 'http://127.0.0.1:8088/api',
   anilistUser: process.env.ANILIST_USERNAME || '',
+  // SEO / Google (§17) — URL publique canonique + vérification Search Console
+  siteUrl: (process.env.SITE_URL || '').replace(/\/$/, ''),
+  googleSiteVerification: process.env.GOOGLE_SITE_VERIFICATION || '',
 
   seed: {
     adminEmail: process.env.SEED_ADMIN_EMAIL || 'admin@tsundoku.app',

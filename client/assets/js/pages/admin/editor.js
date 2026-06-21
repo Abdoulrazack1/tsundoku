@@ -103,32 +103,83 @@ const scheduleAutosave = debounce(async () => {
   } catch { /* ignore */ }
 }, 1500);
 
-/* ---- Import d'un article complet (.md / .html / .txt) ---- */
+/* ---- Import d'un article complet (.md / .html / .txt / .docx / .pdf) ----
+   Le contenu importé est NORMALISÉ : on ne garde que les balises sémantiques
+   et on retire toute police/couleur/style du fichier source -> il adopte
+   automatiquement la typographie et les couleurs du site. */
+const ALLOWED_TAGS = new Set(['P', 'H2', 'H3', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'STRONG', 'B', 'EM', 'I', 'A', 'BR', 'IMG', 'FIGURE', 'FIGCAPTION', 'HR']);
+
+function cleanImportedHtml(html) {
+  const doc = new DOMParser().parseFromString(`<div id="imp">${html}</div>`, 'text/html');
+  const root = doc.getElementById('imp');
+  root.querySelectorAll('h1').forEach((h) => { const h2 = doc.createElement('h2'); h2.innerHTML = h.innerHTML; h.replaceWith(h2); });
+  root.querySelectorAll('h4, h5, h6').forEach((h) => { const h3 = doc.createElement('h3'); h3.innerHTML = h.innerHTML; h.replaceWith(h3); });
+  // Cellules de tableau -> paragraphes (on ne perd pas le texte)
+  root.querySelectorAll('td, th, caption').forEach((c) => { const p = doc.createElement('p'); p.innerHTML = c.innerHTML; c.replaceWith(p); });
+  // Parcours : supprime styles/classes/couleurs ; déballe les balises non autorisées
+  root.querySelectorAll('*').forEach((el) => {
+    if (!ALLOWED_TAGS.has(el.tagName)) { el.replaceWith(...el.childNodes); return; }
+    [...el.attributes].forEach((a) => {
+      const keep = (el.tagName === 'A' && a.name === 'href') || (el.tagName === 'IMG' && (a.name === 'src' || a.name === 'alt'));
+      if (!keep) el.removeAttribute(a.name); // retire style, color, face, class, width…
+    });
+  });
+  return root.innerHTML;
+}
+
+async function pdfToHtml(arrayBuffer) {
+  const pdfjs = window.pdfjsLib;
+  pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+  const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+  const paras = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const page = await pdf.getPage(p);
+    const content = await page.getTextContent();
+    let line = ''; const lines = [];
+    content.items.forEach((it) => { line += it.str; if (it.hasEOL) { lines.push(line); line = ''; } });
+    if (line) lines.push(line);
+    // Regroupe les lignes en paragraphes (séparés par lignes vides)
+    let buf = '';
+    lines.forEach((l) => { if (!l.trim()) { if (buf) { paras.push(buf); buf = ''; } } else buf += (buf ? ' ' : '') + l.trim(); });
+    if (buf) paras.push(buf);
+  }
+  return paras.map((p) => `<p>${p.replace(/</g, '&lt;')}</p>`).join('');
+}
+
 function initImport() {
   const input = qs('#import-file');
   if (!input) return;
   input.addEventListener('change', async () => {
     const file = input.files[0]; if (!file) return;
-    const text = await file.text();
     const ext = file.name.split('.').pop().toLowerCase();
-    let html;
-    if (ext === 'html' || ext === 'htm') html = text;
-    else if (window.marked) html = window.marked.parse(text); // markdown
-    else html = text.split(/\n{2,}/).map((p) => `<p>${p.trim()}</p>`).join('');
+    let html = '';
+    try {
+      if (ext === 'docx') {
+        const { value } = await window.mammoth.convertToHtml({ arrayBuffer: await file.arrayBuffer() });
+        html = value;
+      } else if (ext === 'pdf') {
+        toast('Extraction du PDF…');
+        html = await pdfToHtml(await file.arrayBuffer());
+      } else if (ext === 'html' || ext === 'htm') {
+        html = await file.text();
+      } else if (ext === 'md' || ext === 'markdown') {
+        html = window.marked ? window.marked.parse(await file.text()) : await file.text();
+      } else {
+        html = (await file.text()).split(/\n{2,}/).map((p) => `<p>${p.trim()}</p>`).join('');
+      }
+    } catch (e) { toast('Import impossible : ' + e.message, { type: 'error' }); input.value = ''; return; }
 
-    const doc = new DOMParser().parseFromString(`<div id="imp">${html}</div>`, 'text/html');
-    const root = doc.getElementById('imp');
-    // Titre = 1er H1 (sinon nom de fichier) ; on retire le H1 du corps
-    const h1 = root.querySelector('h1');
-    const title = h1?.textContent?.trim() || file.name.replace(/\.[^.]+$/, '');
-    if (h1) h1.remove();
-    root.querySelectorAll('h1').forEach((h) => { const h2 = doc.createElement('h2'); h2.innerHTML = h.innerHTML; h.replaceWith(h2); });
+    // Titre = 1er H1 du source, sinon nom de fichier
+    const probe = new DOMParser().parseFromString(html, 'text/html');
+    const title = probe.querySelector('h1')?.textContent?.trim() || file.name.replace(/\.[^.]+$/, '');
+    probe.querySelector('h1')?.remove();
 
+    const clean = cleanImportedHtml(probe.body.innerHTML);
     if (!qs('#post-title').value.trim()) qs('#post-title').value = title;
-    const blocks = htmlToBlocks(root.innerHTML);
+    const blocks = htmlToBlocks(clean);
     try { await editor.render({ blocks }); } catch { /* ignore */ }
     updateWordCount(); scheduleAutosave();
-    toast(`Article « ${title.slice(0, 40)} » importé dans l'éditeur`, { type: 'success' });
+    toast(`« ${title.slice(0, 40)} » importé — mis aux normes du site`, { type: 'success' });
     input.value = '';
   });
 }

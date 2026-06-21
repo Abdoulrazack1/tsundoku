@@ -15,7 +15,8 @@ parcimonieux, typographie Fraunces / Newsreader / Space Grotesk.
 | **Frontend** | HTML5 · CSS natif (design tokens) · Vanilla JS (ES modules) · GSAP + ScrollTrigger · Lenis (smooth scroll) · Three.js (livre & étagère 3D) · Chart.js (stats) · Editor.js (rédaction) · DOMPurify · Web Speech API (lecture audio) |
 | **Backend** | Node.js · Express · mysql2 · JWT (dual-token) · bcryptjs · Joi · Helmet · CORS · express-rate-limit · compression · Winston · Multer · morgan |
 | **Base de données** | MySQL 8 (schéma 3NF normalisé) |
-| **SEO / diffusion** | RSS, sitemap.xml, robots.txt dynamiques, JSON-LD, Open Graph |
+| **SEO / diffusion** | **Rendu meta côté serveur** (title/description/canonical/OG/JSON-LD par page, sans JS) · RSS · sitemap.xml (articles + séries) · robots.txt · image Open Graph par défaut |
+| **Import d'articles** | Upload direct **.docx** (mammoth) · **.pdf** (pdf.js) · .md · .html · .txt — **remis automatiquement aux polices et couleurs du site** |
 | **Intégration** | API GraphQL Anilist (couvertures & métadonnées de mangas réelles) |
 
 ---
@@ -140,6 +141,25 @@ L'image est reconstruite et publiée sur **ghcr.io** à chaque push (workflow `d
 (`ci.yml`) : tests → déclenchement du `RENDER_DEPLOY_HOOK`.
 
 En production : durcir le CSP (Helmet), définir des secrets JWT forts, `NODE_ENV=production`.
+
+---
+
+## Référencement Google
+
+Le site est **prêt à être indexé** : chaque page de contenu (article, fiche série)
+est servie avec un `<title>`, une meta description, une URL canonique, des balises
+Open Graph/Twitter et du JSON-LD **générés côté serveur** (visibles sans exécuter le
+JavaScript) — plus `sitemap.xml`, `robots.txt` et une image de partage par défaut.
+
+Une fois le site **en ligne sur un domaine public**, pour le faire remonter sur Google :
+
+1. Renseigner `SITE_URL=https://votre-domaine` dans `server/.env` (URLs canoniques/sitemap absolues).
+2. Créer une propriété sur **Google Search Console** (compte Google requis), choisir la
+   vérification par **balise HTML**, copier le code et le mettre dans
+   `GOOGLE_SITE_VERIFICATION=…` — il s'injecte automatiquement dans les pages.
+3. Dans Search Console : **soumettre le sitemap** `https://votre-domaine/sitemap.xml`.
+
+L'indexation par Google prend ensuite quelques jours.
 
 ---
 © 2026 Tsundoku — Journal de lectures.

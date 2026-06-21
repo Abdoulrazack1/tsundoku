@@ -20,6 +20,9 @@ client/uploads/*
 _extract_*.txt
 _tts_test.js
 
+# Outils locaux (config preview / éditeur)
+.claude/
+
 # OS
 .DS_Store
 Thumbs.db

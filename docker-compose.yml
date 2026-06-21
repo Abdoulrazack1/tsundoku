@@ -36,6 +36,8 @@ services:
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
       INKO_BASE: ${INKO_BASE:-http://host.docker.internal:8088/api}
       ANILIST_USERNAME: ${ANILIST_USERNAME:-}
+      SITE_URL: ${SITE_URL:-}
+      GOOGLE_SITE_VERIFICATION: ${GOOGLE_SITE_VERIFICATION:-}
       SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@tsundoku.app}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-tsundoku2026}
     command: ["sh", "-c", "node db/ensure-seed.js && node server.js"]

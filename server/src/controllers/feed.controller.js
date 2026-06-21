@@ -2,6 +2,7 @@
 
 const asyncHandler = require('../utils/asyncHandler');
 const postModel = require('../models/post.model');
+const bookModel = require('../models/book.model');
 const { escapeHtml } = require('../utils/sanitize');
 
 function siteUrl(req) {
@@ -43,10 +44,12 @@ const rss = asyncHandler(async (req, res) => {
 const sitemap = asyncHandler(async (req, res) => {
   const base = siteUrl(req);
   const { posts } = await postModel.list({ limit: 500, status: 'published' });
+  const { books } = await bookModel.list({ limit: 1000 });
   const staticUrls = ['', '/articles.html', '/articles.html?type=dossier', '/library.html', '/lists.html', '/tags.html', '/stats.html', '/journal.html', '/about.html', '/contact.html', '/newsletter.html', '/legal.html', '/privacy.html'];
   const urls = [
     ...staticUrls.map((u) => `<url><loc>${base}${u || '/'}</loc><changefreq>weekly</changefreq></url>`),
     ...posts.map((p) => `<url><loc>${base}/article.html?slug=${p.slug}</loc><lastmod>${new Date(p.updated_at || p.created_at).toISOString().slice(0, 10)}</lastmod></url>`),
+    ...(books || []).map((b) => `<url><loc>${base}/book.html?slug=${b.slug}</loc><changefreq>monthly</changefreq></url>`),
   ].join('');
   res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`);
