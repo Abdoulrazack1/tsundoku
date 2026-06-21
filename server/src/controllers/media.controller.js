@@ -1,30 +1,48 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
+const crypto = require('crypto');
 const asyncHandler = require('../utils/asyncHandler');
-const { uploadDir } = require('../services/upload.service');
+const { pool, query } = require('../config/database');
 const { AppError } = require('../middlewares/error.middleware');
 
+const EXT = {
+  'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp',
+  'image/avif': 'avif', 'image/gif': 'gif', 'image/svg+xml': 'svg',
+};
+
+/* Upload : stocke l'image EN BASE (persistant même sur disque éphémère) et
+   renvoie une URL stable servie par /api/media/file/:id */
 const upload = asyncHandler(async (req, res) => {
   if (!req.file) throw new AppError('Aucun fichier reçu.', 400);
-  const url = `/uploads/${req.file.filename}`;
-  res.status(201).json({ url, filename: req.file.filename, size: req.file.size });
+  const ext = EXT[req.file.mimetype] || 'bin';
+  const filename = `${Date.now()}-${crypto.randomBytes(5).toString('hex')}.${ext}`;
+  const [r] = await pool.query(
+    'INSERT INTO media_files (filename, mime_type, size, data) VALUES (?,?,?,?)',
+    [filename, req.file.mimetype, req.file.size, req.file.buffer]
+  );
+  res.status(201).json({ url: `/api/media/file/${r.insertId}`, id: r.insertId, filename, size: req.file.size });
+});
+
+/* Service public d'une image stockée en base. */
+const serve = asyncHandler(async (req, res) => {
+  const id = parseInt(req.params.id, 10); // tolère un suffixe d'extension éventuel
+  if (!id) throw new AppError('Identifiant invalide.', 400);
+  const [[row]] = await pool.query('SELECT mime_type, data FROM media_files WHERE id = ?', [id]);
+  if (!row) throw new AppError('Image introuvable.', 404);
+  res.set('Content-Type', row.mime_type);
+  res.set('Cache-Control', 'public, max-age=31536000, immutable');
+  res.set('Access-Control-Allow-Origin', '*');
+  res.send(row.data);
 });
 
 const list = asyncHandler(async (req, res) => {
-  const files = fs.existsSync(uploadDir) ? fs.readdirSync(uploadDir) : [];
-  const items = files
-    .filter((f) => /\.(jpe?g|png|webp|avif|gif|svg)$/i.test(f))
-    .map((f) => { const st = fs.statSync(path.join(uploadDir, f)); return { filename: f, url: `/uploads/${f}`, size: st.size, mtime: st.mtimeMs }; })
-    .sort((a, b) => b.mtime - a.mtime);
-  res.json({ media: items });
+  const rows = await query('SELECT id, filename, mime_type, size, created_at FROM media_files ORDER BY id DESC LIMIT 200');
+  res.json({ media: rows.map((m) => ({ ...m, url: `/api/media/file/${m.id}` })) });
 });
 
 const remove = asyncHandler(async (req, res) => {
-  const safe = path.basename(req.params.filename); // empêche le path traversal
-  const filePath = path.join(uploadDir, safe);
-  if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  const id = parseInt(req.params.id, 10);
+  if (id) await query('DELETE FROM media_files WHERE id = ?', [id]);
   res.json({ message: 'Fichier supprimé.' });
 });
 
@@ -50,4 +68,4 @@ const proxy = asyncHandler(async (req, res) => {
   res.send(Buffer.from(await upstream.arrayBuffer()));
 });
 
-module.exports = { upload, list, remove, proxy };
+module.exports = { upload, serve, list, remove, proxy };

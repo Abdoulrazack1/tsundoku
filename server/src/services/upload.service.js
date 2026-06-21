@@ -3,20 +3,15 @@
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
-const crypto = require('crypto');
 const env = require('../config/env');
 
+// Conservé pour compat (anciens médias éventuels sur disque en local).
 const uploadDir = path.join(__dirname, '..', '..', '..', 'client', 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const name = `${Date.now()}-${crypto.randomBytes(6).toString('hex')}${ext}`;
-    cb(null, name);
-  },
-});
+// Stockage EN MÉMOIRE : on récupère req.file.buffer pour le persister en base
+// (indispensable sur un hébergement à disque éphémère comme Render free).
+const storage = multer.memoryStorage();
 
 const ALLOWED = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/svg+xml'];
 

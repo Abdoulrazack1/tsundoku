@@ -169,6 +169,11 @@ function initImport() {
       }
     } catch (e) { toast('Import impossible : ' + e.message, { type: 'error' }); input.value = ''; return; }
 
+    // Téléverse les planches embarquées (docx/html) vers le stockage persistant
+    const before = html;
+    html = await uploadEmbeddedImages(html);
+    const hadImages = html !== before;
+
     // Titre = 1er H1 du source, sinon nom de fichier
     const probe = new DOMParser().parseFromString(html, 'text/html');
     const title = probe.querySelector('h1')?.textContent?.trim() || file.name.replace(/\.[^.]+$/, '');
@@ -176,12 +181,37 @@ function initImport() {
 
     const clean = cleanImportedHtml(probe.body.innerHTML);
     if (!qs('#post-title').value.trim()) qs('#post-title').value = title;
+    // Texte + planches => format « dossier » par défaut (modifiable)
+    if (hadImages) { const sel = qs('#post-type'); if (sel) sel.value = 'dossier'; }
     const blocks = htmlToBlocks(clean);
     try { await editor.render({ blocks }); } catch { /* ignore */ }
     updateWordCount(); scheduleAutosave();
-    toast(`« ${title.slice(0, 40)} » importé — mis aux normes du site`, { type: 'success' });
+    toast(`« ${title.slice(0, 40)} » importé — texte mis aux normes du site, planches téléversées`, { type: 'success' });
     input.value = '';
   });
+}
+
+/* Téléverse les images embarquées (data:URI issues d'un .docx/.html) vers le
+   stockage persistant en base et remplace leur src par l'URL renvoyée. */
+async function uploadEmbeddedImages(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const imgs = [...doc.querySelectorAll('img')].filter((im) => /^data:image\//i.test(im.getAttribute('src') || ''));
+  if (!imgs.length) return html;
+  let done = 0;
+  for (const im of imgs) {
+    try {
+      const blob = await (await fetch(im.getAttribute('src'))).blob();
+      const ext = (blob.type.split('/')[1] || 'png').replace('+xml', '');
+      const fd = new FormData();
+      fd.append('image', blob, `planche-${Date.now()}-${done}.${ext}`);
+      const { url } = await api.auth.post('/media/upload', fd);
+      im.setAttribute('src', url);
+      im.setAttribute('loading', 'lazy');
+      done += 1;
+      toast(`Téléversement des planches… ${done}/${imgs.length}`);
+    } catch { im.remove(); } // en cas d'échec, on retire l'image pour ne pas casser l'article
+  }
+  return doc.body.innerHTML;
 }
 
 /* ---- Prévisualisation ---- */

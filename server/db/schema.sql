@@ -6,6 +6,7 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS media_files;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS contact_messages;
 DROP TABLE IF EXISTS post_views;
@@ -306,4 +307,17 @@ CREATE TABLE newsletter_subscribers (
     confirm_token   VARCHAR(255),
     subscribed_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     unsubscribed_at TIMESTAMP NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------
+-- Médias (images / planches) stockés EN BASE — persistants même sur un
+-- hébergement à disque éphémère (Render free). Servis via /api/media/file/:id
+-- ---------------------------------------------------------------------
+CREATE TABLE media_files (
+    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    filename   VARCHAR(255) NOT NULL,
+    mime_type  VARCHAR(100) NOT NULL,
+    size       INT UNSIGNED NOT NULL,
+    data       LONGBLOB NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
