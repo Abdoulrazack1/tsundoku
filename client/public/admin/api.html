@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API — Tsundoku Admin</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Newsreader:opsz,wght@6..72,300..600&family=Space+Grotesk:wght@300..700&family=Noto+Serif+JP:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/reset.css">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/typography.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/dark-mode.css">
+  <link rel="stylesheet" href="/assets/css/pages/admin.css">
+  <style>
+    .api-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: .82rem; }
+    .api-table th { text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--line); font-family: var(--font-ui); text-transform: uppercase; letter-spacing: var(--ls-ui); font-size: var(--fs-small); color: var(--muted); }
+    .api-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .api-method { font-weight: 700; color: #1f8f4f; }
+    .api-table code { background: var(--bg); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--line); }
+    .api-out { font-family: var(--font-mono); font-size: .8rem; background: var(--color-ink); color: #d7e9d7; padding: var(--space-md); border-radius: var(--radius-md); overflow: auto; max-height: 360px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="admin">
+    <div data-admin-sidebar></div>
+    <main class="admin-main">
+      <header class="admin-header"><h1 class="font-display">API publique (lecture seule)</h1></header>
+      <p class="text-muted" style="margin-bottom:var(--space-md)">Endpoints JSON sans authentification. L'écriture nécessite un token admin. Limite : 300 req / 15 min.</p>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:var(--space-md)">
+        <input class="input" id="api-path" value="/api/stats/public" style="flex:1;font-family:var(--font-mono)">
+        <button class="btn btn--solid" id="api-run">Exécuter</button>
+      </div>
+      <pre class="api-out" id="api-out">// La réponse JSON s'affichera ici.</pre>
+
+      <h2 class="font-display" style="margin:var(--space-lg) 0 var(--space-md)">Endpoints</h2>
+      <table class="api-table">
+        <thead><tr><th>Méthode</th><th>Endpoint</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="api-method">GET</td><td><code>/api/posts</code></td><td>Chroniques (page, limit, category, tag, type, sort, rating_min)</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/posts/featured</code></td><td>Chronique mise en avant</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/posts/random</code></td><td>Une chronique au hasard</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/posts/search?q=</code></td><td>Recherche plein-texte</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/posts/:slug</code></td><td>Une chronique + adjacents</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/posts/:slug/comments</code></td><td>Commentaires approuvés</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/books</code> · <code>/api/books/:slug</code></td><td>Séries + fiche détaillée</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/authors</code> · <code>/api/authors/:slug</code></td><td>Mangaka + bibliographie</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/categories</code> · <code>/api/tags</code></td><td>Genres · Tags</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/lists</code> · <code>/api/lists/:slug</code></td><td>Listes thématiques</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/stats/public</code></td><td>Statistiques publiques</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/timeline</code></td><td>Journal de lecture</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/api/tts/article/:slug</code></td><td>Audio (voix neuronale)</td></tr>
+          <tr><td class="api-method">GET</td><td><code>/rss.xml</code> · <code>/sitemap.xml</code></td><td>Flux RSS · Sitemap</td></tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+  <script type="module" src="/assets/js/pages/admin/api.js"></script>
+</body>
+</html>

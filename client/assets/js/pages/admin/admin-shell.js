@@ -12,6 +12,7 @@ const NAV = [
   ['Séries / Mangas', '/admin/books.html', 'book'],
   ['Médiathèque', '/admin/media.html', 'image'],
   ['Intégrations', '/admin/integrations.html', 'sync'],
+  ['API', '/admin/api.html', 'code'],
 ];
 
 const ICONS = {
@@ -21,6 +22,7 @@ const ICONS = {
   book: '<path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>',
   sync: '<path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
   image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/>',
+  code: '<path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>',
 };
 
 /** Vérifie la session ; redirige vers login si non authentifié. */
