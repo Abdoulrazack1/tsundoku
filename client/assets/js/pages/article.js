@@ -205,6 +205,10 @@ function setSEO(post) {
     image: location.origin + (post.cover_image_url || ''),
     publisher: { '@type': 'Organization', name: 'Tsundoku' },
   };
+  // Remplace l'éventuel bloc Article injecté côté serveur (évite le doublon)
+  qsa('script[type="application/ld+json"]').forEach((el) => {
+    try { if (JSON.parse(el.textContent)['@type'] === 'Article') el.remove(); } catch { /* ignore */ }
+  });
   const s = document.createElement('script'); s.type = 'application/ld+json'; s.textContent = JSON.stringify(ld);
   document.head.append(s);
   // Fil d'Ariane structuré
