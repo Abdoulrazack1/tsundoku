@@ -17,7 +17,7 @@ export function articleCard(p, variant = 'md') {
   return `
   <article class="article-card article-card--${variant} reveal">
     <a class="article-card__media" href="/article.html?slug=${p.slug}" aria-label="${escapeHtml(p.title)}">
-      <img src="${coverFallback(p.cover_image_url, p.book?.title || p.title)}" alt="Couverture : ${escapeHtml(p.title)}" loading="lazy">
+      <img src="${coverFallback(p.cover_image_url || p.book?.cover_image_url, p.book?.title || p.title)}" alt="Couverture : ${escapeHtml(p.title)}" loading="lazy">
     </a>
     <div class="article-card__body">
       <div class="cluster">

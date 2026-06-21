@@ -30,6 +30,19 @@ function generateRefreshToken(user) {
   });
 }
 
+/** Inscription d'un membre (rôle 'member') + émission des tokens. */
+async function register(username, email, password) {
+  if (await userModel.findByEmail(email)) throw new AppError('Un compte existe déjà avec cet email.', 409, 'EMAIL_TAKEN');
+  if (await userModel.findByUsername(username)) throw new AppError('Ce nom est déjà pris.', 409, 'USERNAME_TAKEN');
+  const passwordHash = await hashPassword(password);
+  const user = await userModel.create({ username, email, passwordHash, role: 'member' });
+  return {
+    user: { id: user.id, username: user.username, email: user.email, role: user.role },
+    accessToken: generateAccessToken(user),
+    refreshToken: generateRefreshToken(user),
+  };
+}
+
 /** Connexion : vérifie les identifiants et émet les deux tokens. */
 async function login(email, password) {
   const user = await userModel.findByEmail(email);
@@ -61,5 +74,5 @@ async function refresh(refreshToken) {
 }
 
 module.exports = {
-  hashPassword, verifyPassword, generateAccessToken, generateRefreshToken, login, refresh,
+  hashPassword, verifyPassword, generateAccessToken, generateRefreshToken, register, login, refresh,
 };

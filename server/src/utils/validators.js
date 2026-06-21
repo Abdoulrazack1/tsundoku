@@ -12,6 +12,13 @@ const schemas = {
     password: Joi.string().min(6).max(128).required(),
   }),
 
+  register: Joi.object({
+    username: Joi.string().min(3).max(50).pattern(/^[\p{L}0-9 _.-]+$/u).required()
+      .messages({ 'string.pattern.base': 'Le nom ne peut contenir que lettres, chiffres, espaces, _ . -' }),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).max(128).required(),
+  }),
+
   // --- Posts ---
   postCreate: Joi.object({
     title: Joi.string().min(2).max(255).required(),

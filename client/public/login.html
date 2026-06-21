@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion — Tsundoku</title>
+  <meta name="description" content="Connecte-toi ou crée ton compte lecteur Tsundoku pour commenter et garder tes lectures.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Space+Grotesk:wght@300..700&family=Noto+Serif+JP:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/reset.css">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/typography.css">
+  <link rel="stylesheet" href="/assets/css/layout.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/animations.css">
+  <link rel="stylesheet" href="/assets/css/dark-mode.css">
+  <style>
+    .auth-wrap { max-width: 440px; margin: 0 auto; padding-top: calc(var(--nav-h) + var(--space-lg)); }
+    .auth-tabs { display: flex; gap: 4px; border: 1px solid var(--line); border-radius: 999px; padding: 4px; margin-bottom: var(--space-lg); }
+    .auth-tab { flex: 1; padding: 10px; border-radius: 999px; font-family: var(--font-ui); font-size: var(--fs-ui); letter-spacing: 0.04em; transition: all var(--t-fast); }
+    .auth-tab.is-active { background: var(--ink); color: var(--bg); }
+    .auth-form { display: none; flex-direction: column; gap: var(--space-sm); }
+    .auth-form.is-active { display: flex; }
+    .auth-kanji { font-family: var(--font-jp); font-size: 2.4rem; text-align: center; color: var(--color-accent); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <div data-navbar></div>
+  <main id="main">
+    <section class="section container">
+      <div class="auth-wrap">
+        <p class="auth-kanji" aria-hidden="true">読</p>
+        <h1 class="font-display" style="font-size:2rem;text-align:center;margin-bottom:8px">Espace lecteur</h1>
+        <p class="text-muted" style="text-align:center;margin-bottom:var(--space-lg)">Commente, sauvegarde tes lectures, suis les nouveautés.</p>
+
+        <div class="auth-tabs" role="tablist">
+          <button class="auth-tab is-active" data-tab="login" role="tab">Se connecter</button>
+          <button class="auth-tab" data-tab="register" role="tab">Créer un compte</button>
+        </div>
+
+        <form class="auth-form is-active" id="login-form" novalidate>
+          <div class="field"><label for="l-email">Email</label><input class="input" id="l-email" type="email" name="email" required autocomplete="email"></div>
+          <div class="field"><label for="l-pass">Mot de passe</label><input class="input" id="l-pass" type="password" name="password" required autocomplete="current-password"></div>
+          <button class="btn btn--solid btn--block" type="submit">Se connecter</button>
+          <p class="field__error" id="login-err" role="alert"></p>
+        </form>
+
+        <form class="auth-form" id="register-form" novalidate>
+          <div class="field"><label for="r-name">Nom d'affichage</label><input class="input" id="r-name" name="username" required minlength="3" autocomplete="nickname"></div>
+          <div class="field"><label for="r-email">Email</label><input class="input" id="r-email" type="email" name="email" required autocomplete="email"></div>
+          <div class="field"><label for="r-pass">Mot de passe (6+ caractères)</label><input class="input" id="r-pass" type="password" name="password" required minlength="6" autocomplete="new-password"></div>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0">
+          <button class="btn btn--solid btn--block" type="submit">Créer mon compte</button>
+          <p class="field__error" id="register-err" role="alert"></p>
+        </form>
+
+        <p class="text-muted" style="text-align:center;margin-top:var(--space-lg);font-size:.85rem">Tu es l'administrateur ? <a href="/admin/login.html" class="text-accent">Espace admin</a></p>
+      </div>
+    </section>
+  </main>
+  <div data-footer></div>
+  <script type="module" src="/assets/js/main.js"></script>
+  <script type="module" src="/assets/js/pages/auth-user.js"></script>
+</body>
+</html>

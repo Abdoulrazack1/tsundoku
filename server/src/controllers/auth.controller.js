@@ -23,6 +23,14 @@ const login = asyncHandler(async (req, res) => {
   res.json({ user, accessToken });
 });
 
+const register = asyncHandler(async (req, res) => {
+  const { username, email, password } = req.body;
+  const { user, accessToken, refreshToken } = await authService.register(username, email, password);
+  res.cookie(REFRESH_COOKIE, refreshToken, cookieOptions);
+  logger.info(`[auth] Inscription : ${user.email}`);
+  res.status(201).json({ user, accessToken });
+});
+
 const refresh = asyncHandler(async (req, res) => {
   const token = req.cookies?.[REFRESH_COOKIE];
   const { accessToken, user } = await authService.refresh(token);
@@ -40,4 +48,4 @@ const me = asyncHandler(async (req, res) => {
   res.json({ user });
 });
 
-module.exports = { login, refresh, logout, me };
+module.exports = { login, register, refresh, logout, me };

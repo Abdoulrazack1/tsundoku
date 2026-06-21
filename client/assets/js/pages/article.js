@@ -177,7 +177,8 @@ function adjacentCard(p, dir) {
 function setSEO(post) {
   document.title = `${post.title} — Tsundoku`;
   const desc = post.meta_description || post.excerpt || '';
-  const img = post.cover_image_url ? (location.origin + post.cover_image_url) : '';
+  const coverPath = post.cover_image_url || post.book?.cover_image_url || '';
+  const img = coverPath ? (coverPath.startsWith('http') ? coverPath : location.origin + coverPath) : '';
   const set = (sel, attr, val) => { const m = qs(sel); if (m) m.setAttribute(attr, val); };
   set('meta[name="description"]', 'content', desc);
   // Open Graph / Twitter Cards dynamiques (§17.4)
@@ -441,7 +442,7 @@ async function render() {
         ${ratingAxes(post)}
       </header>
       <figure style="text-align:center">
-        <img class="article-cover" src="${coverFallback(post.cover_image_url, post.title)}" alt="Couverture : ${escapeHtml(post.book?.title || post.title)}">
+        <img class="article-cover" src="${coverFallback(post.cover_image_url || post.book?.cover_image_url, post.book?.title || post.title)}" alt="Couverture : ${escapeHtml(post.book?.title || post.title)}">
       </figure>
 
       <div id="audio-player" class="audio-player">
@@ -531,11 +532,12 @@ async function render() {
     });
 
     // Livre 3D à côté de la couverture (§8.3A)
-    if (window.THREE && !prefersReducedMotion() && post.cover_image_url) {
+    const cover3d = post.cover_image_url || post.book?.cover_image_url;
+    if (window.THREE && !prefersReducedMotion() && cover3d) {
       const holder = document.createElement('div');
       holder.className = 'book-3d'; holder.style.height = '320px';
       qs('.article-sidebar')?.prepend(holder);
-      initBook3D(holder, post.cover_image_url);
+      initBook3D(holder, cover3d);
     }
 
     // Titre animé

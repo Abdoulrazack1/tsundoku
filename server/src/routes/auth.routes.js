@@ -8,6 +8,7 @@ const { authLimiter } = require('../middlewares/rateLimit.middleware');
 const schemas = require('../utils/validators');
 
 router.post('/login', authLimiter, validate(schemas.login), ctrl.login);
+router.post('/register', authLimiter, validate(schemas.register), ctrl.register);
 router.post('/refresh', ctrl.refresh);
 router.post('/logout', ctrl.logout);
 router.get('/me', requireAuth, ctrl.me);

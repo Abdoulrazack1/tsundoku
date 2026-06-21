@@ -6,6 +6,10 @@ async function findByEmail(email) {
   return queryOne('SELECT * FROM users WHERE email = :email', { email });
 }
 
+async function findByUsername(username) {
+  return queryOne('SELECT * FROM users WHERE username = :username', { username });
+}
+
 async function findById(id) {
   return queryOne('SELECT id, username, email, role, avatar_url, bio, created_at FROM users WHERE id = :id', { id });
 }
@@ -18,4 +22,4 @@ async function create({ username, email, passwordHash, role = 'admin', bio = nul
   return findById(res.insertId);
 }
 
-module.exports = { findByEmail, findById, create };
+module.exports = { findByEmail, findByUsername, findById, create };

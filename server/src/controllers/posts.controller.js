@@ -3,7 +3,16 @@
 const crypto = require('crypto');
 const asyncHandler = require('../utils/asyncHandler');
 const postModel = require('../models/post.model');
+const bookModel = require('../models/book.model');
 const slugify = require('../utils/slugify');
+
+/** Si pas de couverture mais une série liée, on reprend la cover de la série. */
+async function defaultCoverFromBook(data) {
+  if (!data.cover_image_url && data.book_id) {
+    const book = await bookModel.getById(data.book_id);
+    if (book?.cover_image_url) data.cover_image_url = book.cover_image_url;
+  }
+}
 const { calculateReadingTime } = require('../utils/readingTime');
 const { sanitizeHtml } = require('../utils/sanitize');
 const { AppError } = require('../middlewares/error.middleware');
@@ -73,6 +82,7 @@ const create = asyncHandler(async (req, res) => {
   data.content = sanitizeHtml(data.content);
   data.slug = await uniqueSlug(data.title, data.slug);
   data.reading_time = calculateReadingTime(data.content);
+  await defaultCoverFromBook(data);
   const post = await postModel.create(data, req.user.id);
   res.status(201).json({ post });
 });
@@ -87,6 +97,7 @@ const update = asyncHandler(async (req, res) => {
     data.reading_time = calculateReadingTime(data.content);
   }
   if (data.slug) data.slug = await uniqueSlug(data.title || existing.title, data.slug, id);
+  if (data.book_id !== undefined) await defaultCoverFromBook(data);
   const post = await postModel.update(id, data);
   res.json({ post });
 });
