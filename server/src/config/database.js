@@ -19,7 +19,16 @@ const pool = mysql.createPool({
   charset: 'utf8mb4',
   dateStrings: true,
   namedPlaceholders: true,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000,
   ...(env.db.ssl ? { ssl: { rejectUnauthorized: false } } : {}),
+});
+
+// Bases managées (Aiven, TiDB…) ferment les connexions inactives : on capture
+// l'erreur du pool pour ne pas faire planter le process (il en recrée une au besoin).
+pool.on('error', (err) => {
+  // eslint-disable-next-line no-console
+  console.error('[db pool]', err && err.code ? err.code : err.message);
 });
 
 /** Helper : exécute une requête et retourne directement les lignes. */

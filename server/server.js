@@ -29,4 +29,14 @@ async function start() {
   process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
+// Filet de sécurité : ne JAMAIS laisser une erreur non capturée tuer le process
+// (typiquement une connexion MySQL inactive coupée par une base managée comme Aiven).
+// On journalise et on continue — le pool recrée les connexions à la demande.
+process.on('unhandledRejection', (reason) => {
+  logger.error(`[unhandledRejection] ${reason && reason.stack ? reason.stack : reason}`);
+});
+process.on('uncaughtException', (err) => {
+  logger.error(`[uncaughtException] ${err && err.stack ? err.stack : err}`);
+});
+
 start();
