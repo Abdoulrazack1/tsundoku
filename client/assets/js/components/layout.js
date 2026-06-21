@@ -87,6 +87,7 @@ function footerHTML() {
         <a href="/lists.html">Listes thématiques</a>
         <a href="/newsletter.html">Newsletter</a>
         <a href="/rss.xml">Flux RSS</a>
+        <a href="/api.html">API publique</a>
         <a href="/admin/login.html">Administration</a>
       </div>
       <div class="footer__col">

@@ -359,10 +359,45 @@ function initZen() {
 }
 
 /* ---- Partage de sélection (§23.3) ---- */
+/** Génère une carte-citation (PNG washi/vermillon) téléchargeable. */
+function quoteImage(text, post) {
+  const W = 1200, H = 630;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const c = cv.getContext('2d');
+  // Fond washi
+  c.fillStyle = '#f1ebe0'; c.fillRect(0, 0, W, H);
+  // Cadre
+  c.strokeStyle = 'rgba(26,26,26,0.18)'; c.lineWidth = 2; c.strokeRect(40, 40, W - 80, H - 80);
+  // Kanji filigrane
+  c.fillStyle = 'rgba(26,26,26,0.05)'; c.font = '700 420px "Noto Serif JP", serif';
+  c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText('読', W - 30, H / 2 + 40);
+  // Filet vermillon
+  c.fillStyle = '#c0392b'; c.fillRect(90, 120, 60, 6);
+  // Eyebrow
+  c.fillStyle = '#c0392b'; c.font = '600 22px "Space Grotesk", sans-serif'; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+  c.fillText('TSUNDOKU · CITATION', 90, 110);
+  // Texte de la citation (wrap)
+  c.fillStyle = '#1a1a1a'; c.font = 'italic 600 46px "Fraunces", Georgia, serif';
+  const quote = `« ${text.length > 260 ? text.slice(0, 257) + '…' : text} »`;
+  const maxW = W - 260; const words = quote.split(' '); let line = ''; const lines = [];
+  for (const w of words) { if (c.measureText(line + ' ' + w).width > maxW && line) { lines.push(line); line = w; } else line = line ? `${line} ${w}` : w; }
+  if (line) lines.push(line);
+  const lh = 60; let y = H / 2 - ((lines.length - 1) * lh) / 2 - 10;
+  lines.slice(0, 6).forEach((l) => { c.fillText(l, 90, y); y += lh; });
+  // Signature
+  c.fillStyle = '#8a7456'; c.font = '400 26px "Space Grotesk", sans-serif';
+  c.fillText(`— ${post.book?.author?.name || post.title}`, 90, H - 80);
+  // Téléchargement
+  const a = document.createElement('a');
+  a.download = `tsundoku-citation-${post.slug}.png`;
+  a.href = cv.toDataURL('image/png');
+  a.click();
+}
+
 function initSelectionShare(post) {
   const bar = document.createElement('div');
   bar.className = 'selection-share';
-  bar.innerHTML = '<button data-act="tweet">Partager</button><button data-act="copy">Copier</button>';
+  bar.innerHTML = '<button data-act="tweet">Partager</button><button data-act="copy">Copier</button><button data-act="image">Image</button>';
   document.body.append(bar);
   let selected = '';
   document.addEventListener('mouseup', () => {
@@ -381,6 +416,7 @@ function initSelectionShare(post) {
     const quote = `« ${selected} » — ${post.title}`;
     if (act === 'copy') { navigator.clipboard.writeText(`${quote}\n${location.href}`); toast('Citation copiée'); }
     if (act === 'tweet') window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(quote)}&url=${encodeURIComponent(location.href)}`, '_blank');
+    if (act === 'image') { quoteImage(selected, post); toast('Carte-citation générée', { type: 'success' }); }
     bar.classList.remove('is-visible');
   });
 }
