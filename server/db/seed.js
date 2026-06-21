@@ -32,6 +32,7 @@ async function main() {
   const conn = await mysql.createConnection({
     host: env.db.host, port: env.db.port, user: env.db.user,
     password: env.db.password, database: env.db.name, multipleStatements: true,
+    ...(env.db.ssl ? { ssl: { rejectUnauthorized: false } } : {}),
   });
 
   await conn.query('SET FOREIGN_KEY_CHECKS=0');

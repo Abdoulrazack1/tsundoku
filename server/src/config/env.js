@@ -18,6 +18,8 @@ const env = {
     name: process.env.DB_NAME || 'tsundoku',
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
+    // Bases managées gratuites (Aiven, TiDB…) imposent TLS : DB_SSL=true
+    ssl: process.env.DB_SSL === 'true' || process.env.DB_SSL === '1',
   },
 
   jwt: {

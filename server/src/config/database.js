@@ -19,6 +19,7 @@ const pool = mysql.createPool({
   charset: 'utf8mb4',
   dateStrings: true,
   namedPlaceholders: true,
+  ...(env.db.ssl ? { ssl: { rejectUnauthorized: false } } : {}),
 });
 
 /** Helper : exécute une requête et retourne directement les lignes. */
