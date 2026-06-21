@@ -103,6 +103,36 @@ const scheduleAutosave = debounce(async () => {
   } catch { /* ignore */ }
 }, 1500);
 
+/* ---- Import d'un article complet (.md / .html / .txt) ---- */
+function initImport() {
+  const input = qs('#import-file');
+  if (!input) return;
+  input.addEventListener('change', async () => {
+    const file = input.files[0]; if (!file) return;
+    const text = await file.text();
+    const ext = file.name.split('.').pop().toLowerCase();
+    let html;
+    if (ext === 'html' || ext === 'htm') html = text;
+    else if (window.marked) html = window.marked.parse(text); // markdown
+    else html = text.split(/\n{2,}/).map((p) => `<p>${p.trim()}</p>`).join('');
+
+    const doc = new DOMParser().parseFromString(`<div id="imp">${html}</div>`, 'text/html');
+    const root = doc.getElementById('imp');
+    // Titre = 1er H1 (sinon nom de fichier) ; on retire le H1 du corps
+    const h1 = root.querySelector('h1');
+    const title = h1?.textContent?.trim() || file.name.replace(/\.[^.]+$/, '');
+    if (h1) h1.remove();
+    root.querySelectorAll('h1').forEach((h) => { const h2 = doc.createElement('h2'); h2.innerHTML = h.innerHTML; h.replaceWith(h2); });
+
+    if (!qs('#post-title').value.trim()) qs('#post-title').value = title;
+    const blocks = htmlToBlocks(root.innerHTML);
+    try { await editor.render({ blocks }); } catch { /* ignore */ }
+    updateWordCount(); scheduleAutosave();
+    toast(`Article « ${title.slice(0, 40)} » importé dans l'éditeur`, { type: 'success' });
+    input.value = '';
+  });
+}
+
 /* ---- Prévisualisation ---- */
 async function preview() {
   const out = await editor.save();
@@ -352,6 +382,7 @@ async function main() {
   await loadExisting();
   initSeriesPicker();
   initInkoPicker();
+  initImport();
   qs('#preview-btn').addEventListener('click', preview);
   setTimeout(updateWordCount, 400);
 

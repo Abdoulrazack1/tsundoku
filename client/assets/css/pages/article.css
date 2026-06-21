@@ -87,7 +87,9 @@
 .reader-ctrls button:hover { border-color: var(--ink); }
 .reader-ctrls .reader-dys { flex: 1; }
 .reader-ctrls button.is-active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-.article-body.is-dyslexic { font-family: Verdana, Tahoma, "Trebuchet MS", sans-serif; letter-spacing: 0.03em; word-spacing: 0.12em; line-height: 2; }
+/* Confort « plus d'air » — on garde la police du site, on aère l'espacement */
+.article-body.is-airy { line-height: 2.15; letter-spacing: 0.012em; word-spacing: 0.08em; }
+.article-body.is-airy p { margin-top: 1.9em; }
 
 /* Commentaires */
 .comments-section { border-top: 1px solid var(--line); }

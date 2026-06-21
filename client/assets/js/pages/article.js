@@ -314,12 +314,13 @@ function initReaderComfort() {
   const ctrls = qs('.reader-ctrls');
   if (!body || !ctrls) return;
   const KEY = 'tsundoku_reader';
-  let st = { size: 1, dys: false };
+  let st = { size: 1, airy: false };
   try { st = { ...st, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { /* ignore */ }
   const apply = () => {
+    // On conserve la police du site ; on n'ajuste que taille + espacement.
     body.style.fontSize = `${st.size}rem`;
-    body.classList.toggle('is-dyslexic', st.dys);
-    qs('.reader-dys', ctrls).classList.toggle('is-active', st.dys);
+    body.classList.toggle('is-airy', st.airy);
+    qs('.reader-space', ctrls).classList.toggle('is-active', st.airy);
     localStorage.setItem(KEY, JSON.stringify(st));
   };
   apply();
@@ -328,7 +329,7 @@ function initReaderComfort() {
     if (r === '+') st.size = Math.min(1.6, +(st.size + 0.08).toFixed(2));
     else if (r === '-') st.size = Math.max(0.85, +(st.size - 0.08).toFixed(2));
     else if (r === 'reset') st.size = 1;
-    else if (r === 'dys') st.dys = !st.dys;
+    else if (r === 'space') st.airy = !st.airy;
     apply();
   });
 }
@@ -439,10 +440,10 @@ async function render() {
           <div class="sidebar-card reader-card">
             <h4>Confort de lecture</h4>
             <div class="reader-ctrls">
-              <button data-r="-" aria-label="Réduire la police">A−</button>
+              <button data-r="-" aria-label="Réduire la taille">A−</button>
               <button data-r="reset" aria-label="Taille par défaut">A</button>
-              <button data-r="+" aria-label="Agrandir la police">A+</button>
-              <button data-r="dys" class="reader-dys" aria-label="Police lisible">Police lisible</button>
+              <button data-r="+" aria-label="Agrandir la taille">A+</button>
+              <button data-r="space" class="reader-space" aria-label="Plus d'espacement">Plus d'air</button>
             </div>
           </div>
         </aside>
